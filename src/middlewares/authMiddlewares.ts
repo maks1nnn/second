@@ -5,11 +5,11 @@ export const ADMIN_AUTH = 'admin:qwerty' // get from SETTINGS
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const auth = req.headers['authorization'] as string // 'Basic xxxx'
-    console.log(auth)
+    //console.log(auth)
     if (!auth) {
         res
             .status(401)
-            .json({})
+            .send('not found')
         return
     }
     const buff = Buffer.from(auth.slice(6), 'base64')
@@ -18,11 +18,11 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     const buff2 = Buffer.from(ADMIN_AUTH, 'utf8')
     const codedAuth = buff2.toString('base64')
  
-   // if (decodedAuth === ADMIN_AUTH || auth.slice(0, 5) !== 'Basic ') {
-    if (auth.slice(6) !== codedAuth || auth.slice(0, 5) !== 'Basic ') {
+   //if (decodedAuth === ADMIN_AUTH || auth.slice(0, 5) !== 'Basic ') {
+    if (auth.slice(6) !== codedAuth ) {
         res
             .status(401)
-            .json({})
+            .send('invalid')
         return
     }
  
