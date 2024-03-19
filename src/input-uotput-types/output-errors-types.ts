@@ -1,10 +1,6 @@
 export type OutputErrorsType = {
-    
-        errorsMessages: 
-          {
-            message: string,
-            field: string
-          }[]
-        
-      
+  errorsMessages: {
+      message: string,
+      field: string,
+  }[]
 }

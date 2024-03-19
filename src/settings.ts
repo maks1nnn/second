@@ -5,8 +5,11 @@ config()
 export const SETTINGS ={
     PORT: process.env.PORT || 3003,
     PATH: {
-        BLOGS: 'blogs',
+        BLOGS: '/blogs',
         POSTS: '/posts',
         TEST: '/testing',
+    },
+    ADMIN_AUTH: {
+        admin:'qwerty'
     }
 }

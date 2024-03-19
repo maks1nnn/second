@@ -7,25 +7,25 @@ import { OutputPostDBType, InputPostType } from '../input-uotput-types/post-type
 
 
 export const postControllers = {
-    getAll(req: Request, res: Response) {
+    getAll(req: Request, res: Response<OutputPostDBType[]>) {
         const posts = postRepository.getAllPosts()
         if (posts) {
             res.status(200).json(posts)
         } else {
-            res.send(404)
+            res.status(404).end()
         }
     },
 
-    find(req: Request, res: Response) {
+    find(req: Request<{id:string}>, res: Response<OutputPostDBType>) {
         const post = postRepository.findPosts(req.params.id)
         if (post) {
             res.status(200).json(post)
         } else {
-            res.send(404)
+            res.status(404).end()
         }
     },
 
-    create(req: Request, res: Response<OutputErrorsType | OutputPostDBType>) {
+    create(req: Request<{},{}, InputPostType>, res: Response<OutputErrorsType | OutputPostDBType>) {
         /* const errors = inputValidation(req.body)
          if (errors.errorsMessages.length) {
              res
@@ -40,20 +40,20 @@ export const postControllers = {
 
     },
 
-    update (req:Request,res:Response) {
+    update (req:Request<{id:string}, {}, InputPostType>,res:Response<OutputErrorsType|OutputPostDBType>) {
         const updatePost = postRepository.updatePosts(req.params.id, req.body)
         if(updatePost){
-        res.send(204)}else{
-            res.send(404)
+        res.status(204).end()}else{
+            res.status(404).end()
         }
     },
 
-    delete(req: Request, res: Response) {
+    delete(req: Request<{id:string}>, res: Response<OutputPostDBType[]>) {
         const isDelete = postRepository.deletePosts(req.params.id)
         if (isDelete) {
-            res.send(204)
+            res.status(204).end()
         } else {
-            res.send(404)
+            res.status(404).end()
         }
     }
 

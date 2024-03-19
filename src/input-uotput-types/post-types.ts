@@ -20,3 +20,9 @@ export type UpdatePostType = {
     content: string,
     blogId: string,
 }
+
+export const PostValidatorRules = {
+    titleMaxLength:  30,
+    shortDescriptionMaxLength: 100,
+    contentMaxLength: 1000,
+}
