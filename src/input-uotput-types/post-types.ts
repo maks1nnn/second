@@ -4,7 +4,7 @@ export type OutputPostDBType = {
     shortDescription: string,
     content: string,
     blogId: string,
-   // blogName: string
+    blogName: string
 }
 
 export type InputPostType = {

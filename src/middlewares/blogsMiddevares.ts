@@ -1,32 +1,29 @@
 import { body } from "express-validator"
 import { BlogValidatorRules } from '../input-uotput-types/blog-types'
 
-
-export const blogNameValidation = body('name')
+export const blogValidationMiddlewares =[
+ body('name')
     .isString()
     .withMessage("Name should be a string")
     .trim()
     .isLength({ min: 1, max: BlogValidatorRules.nameMaxLength })
-    .withMessage(`Title should be 1-${BlogValidatorRules.nameMaxLength} characters long`);
+    .withMessage(`Title should be 1-${BlogValidatorRules.nameMaxLength} characters long`),
 
-export const blogDescriptionValidation = body('description')
+  body('description')
     .isString()
     .withMessage('Should be a string')
     .trim()
     .isLength({ min: 1, max: BlogValidatorRules.descriptionMaxLength })
-    .withMessage(`Description should be 1-${BlogValidatorRules.descriptionMaxLength} characters long`)
+    .withMessage(`Description should be 1-${BlogValidatorRules.descriptionMaxLength} characters long`),
 
-export const blogWebUrlLengthValidation = body('websiteUrl')
+ body('websiteUrl')
     .isString()
     .withMessage('Should be a string')
     .trim()
     .isLength({ min: 1, max: BlogValidatorRules.websiteUrlMaxLength })
     .withMessage(`Content should be 1-${BlogValidatorRules.websiteUrlMaxLength} characters long`)
     .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/, 'i')
-    .withMessage('Invalid website URL');
+    .withMessage('Invalid website URL'),
+]
 
-    export const blogValidationMiddlewares = [
-        blogNameValidation,
-        blogDescriptionValidation,
-        blogWebUrlLengthValidation
-    ];
+    

@@ -1,6 +1,7 @@
 import { db } from '../db/db'
 import { InputPostType } from '../input-uotput-types/post-types'
 import { PostDBType } from '../db/post-db-type'
+import {blogRepository} from '../repositories/blogs-repositories'
 
 export const postRepository = {
     
@@ -13,11 +14,16 @@ export const postRepository = {
 
 
     createPosts(body: InputPostType) {
+        const blog = blogRepository.findBlogs(body.blogId)
+        if(!blog){
+         return
+        }
         const newPost: PostDBType = {
             title: body.title,
             shortDescription: body.shortDescription,
             content: body.content,
             blogId: body.blogId,
+            blogName: blog.name, 
 
             id: (Date.now() + Math.random()).toString()
         }
