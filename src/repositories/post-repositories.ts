@@ -1,11 +1,12 @@
 import { db } from '../db/db'
-import { InputPostType } from '../input-uotput-types/post-types'
+import { InputPostType, OutputPostDBType } from '../input-uotput-types/post-types'
 import { PostDBType } from '../db/post-db-type'
 import {blogRepository} from '../repositories/blogs-repositories'
+import { BlogDBType } from '../db/blog-db-type'
 
 export const postRepository = {
     
-    findPosts(id:string) {
+    async findPosts(id:string) {
         const post = db.posts.find(p => p.id === id)
         if(post){
             return post
@@ -13,11 +14,9 @@ export const postRepository = {
     },
 
 
-    createPosts(body: InputPostType) {
-        const blog = blogRepository.findBlogs(body.blogId)
-        if(!blog){
-         return
-        }
+   async createPosts(body: InputPostType) : Promise<OutputPostDBType>  {
+        const blog  = blogRepository.findBlogs(body.blogId)
+        if (blog){
         const newPost: PostDBType = {
             title: body.title,
             shortDescription: body.shortDescription,
@@ -30,16 +29,16 @@ export const postRepository = {
 
         db.posts = [...db.posts, newPost]
 
-        return newPost;
+        return newPost;}
     },
 
-    getAllPosts() {
+   async getAllPosts() {
         return db.posts
 
     },
 
 
-    updatePosts(id: string, body: InputPostType) {
+    async updatePosts(id: string, body: InputPostType): Promise<boolean> {
         const upPost = db.posts.find(p => p.id === id)
         if (upPost) {
             upPost.title = body.title
@@ -51,7 +50,7 @@ export const postRepository = {
     },
 
 
-    deletePosts(id: string) {
+    async deletePosts(id: string) : Promise<boolean> {
         const newPosts = db.posts.filter(v => v.id !== id)
         if (newPosts.length < db.posts.length) {
             db.posts = newPosts
