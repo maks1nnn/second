@@ -5,10 +5,12 @@ import { BlogDBType } from '../db/blog-db-type'
 export const blogRepository = {
 
     findBlogs(id: string) {
-        const blog = db.blogs.find(p => p.id === id)
-        if (blog) {
-            return blog
-        } else { return false }
+        const blog  = db.blogs.find(p => p.id === id)
+        if(blog){
+            return blog}else {
+                return false
+            }
+        
     },
 
 
