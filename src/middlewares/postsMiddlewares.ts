@@ -1,6 +1,8 @@
 import {body} from "express-validator"
+import { ObjectId } from "mongodb"
 import {PostValidatorRules} from '../input-uotput-types/post-types'
-import {blogRepository} from '../repositories/blogs-repositories'
+import {blogRepository} from '../repositories/blogMongo-repositories'
+
 
 export const postValidationMiddlewares =[
      body('title')
@@ -28,11 +30,16 @@ export const postValidationMiddlewares =[
         .isString()
         .withMessage('Blog should be string')
         .trim()
-        .isLength({min:1})
+        .isLength({min:12, max :24})
         .withMessage('Blog Id is required')
-        .custom((blogId) => {
-            const isBlogIdExists = blogRepository.findBlogs(blogId)
-            return !!isBlogIdExists;
-        })
-        .withMessage("there is no blog with such id"),
+        .custom(async (blogId) => {
+         const blog = await blogRepository.findBlogs(new ObjectId(blogId));
+         if (!blog) {
+             return Promise.reject('There is no blog with such id');
+         }
+         return true;
+     })
+     .withMessage("There is no blog with such id")
+        .matches(/^[0-9a-fA-F]+$/, 'i')
+        .withMessage('invalidId'),
     ]

@@ -1,4 +1,4 @@
-import { db } from '../db/db'
+/*import { db } from '../db/db'
 import { InputPostType, OutputPostDBType } from '../input-uotput-types/post-types'
 import { PostDBType } from '../db/post-db-type'
 import {blogRepository} from '../repositories/blogs-repositories'
@@ -14,7 +14,7 @@ export const postRepository = {
     },
 
 
-   async createPosts(body: InputPostType) : Promise<OutputPostDBType>  {
+   createPosts(body: InputPostType)   {
         const blog  = blogRepository.findBlogs(body.blogId)
         if (blog){
         const newPost: PostDBType = {
@@ -29,7 +29,7 @@ export const postRepository = {
 
         db.posts = [...db.posts, newPost]
 
-        return newPost;}
+        return newPost;}else{return false}
     },
 
    async getAllPosts() {
@@ -57,4 +57,4 @@ export const postRepository = {
             return true
         } else { return false }
     },
-}
+}*/

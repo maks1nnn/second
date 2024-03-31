@@ -1,14 +1,14 @@
 import { Request, Response } from 'express'
-import { postRepository } from '../repositories/post-repositories'
+import { postServise } from '../domain/post-servise' 
 import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
 import { OutputPostDBType, InputPostType } from '../input-uotput-types/post-types'
-
+import { ObjectId } from 'mongodb'
 
 
 
 export const postControllers = {
-    async getAll(req: Request, res: Response<OutputPostDBType[]>) {
-        const posts = await postRepository.getAllPosts()
+    async getAll(req: Request, res: Response<OutputPostDBType[]>|any) {
+        const posts = await postServise.getAllPosts()
         if (posts) {
             res.status(200).json(posts)
         } else {
@@ -17,7 +17,7 @@ export const postControllers = {
     },
 
     async find(req: Request<{ id: string }>, res: Response<OutputPostDBType>) {
-        const post =await postRepository.findPosts(req.params.id)
+        const post = await postServise.findForOutput(new ObjectId(req.params.id))
         if (post) {
             res.status(200).json(post)
         } else {
@@ -25,15 +25,18 @@ export const postControllers = {
         }
     },
 
-    async create(req: Request<{}, {}, InputPostType>, res: Response<OutputErrorsType | OutputPostDBType>) {
+     async create(req: Request<{}, {}, InputPostType>, res: Response<OutputErrorsType | OutputPostDBType>) {
 
-        const newPost =  await postRepository.createPosts(req.body)
-        res.status(201).json(newPost)
+        const insertInfo = await postServise.createPosts(req.body)
+        if(insertInfo){
+        const newBlog = await postServise.findForOutput(insertInfo)
+        if(newBlog){
+        res.status(201).json(newBlog)}}else {res.status(400).end()}
 
     },
 
    async update(req: Request<{ id: string }, {}, InputPostType>, res: Response<OutputErrorsType | OutputPostDBType>) {
-        const updatePost = await postRepository.updatePosts(req.params.id, req.body)
+        const updatePost = await postServise.updatePosts(new ObjectId(req.params.id), req.body)
         if (updatePost) {
             res.status(204).end()
         } else {
@@ -42,7 +45,7 @@ export const postControllers = {
     },
 
     async delete(req: Request<{ id: string }>, res: Response<OutputPostDBType[]>) {
-        const isDelete =await  postRepository.deletePosts(req.params.id)
+        const isDelete =await  postServise.deletePosts(new ObjectId(req.params.id))
         if (isDelete) {
             res.status(204).end()
         } else {

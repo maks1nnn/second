@@ -1,4 +1,4 @@
-import { db } from '../db/db'
+/*import { db } from '../db/db'
 import { InputBlogType } from '../input-uotput-types/blog-types'
 import { BlogDBType } from '../db/blog-db-type'
 
@@ -14,7 +14,7 @@ export const blogRepository = {
     },
 
 
-    createBlogs(body: InputBlogType) {
+   (body: InputBlogType) {
         const newBlog: BlogDBType = {
             
             name: body.name,
@@ -54,4 +54,4 @@ export const blogRepository = {
             return true
         } else { return false }
     },
-}
+}*/
