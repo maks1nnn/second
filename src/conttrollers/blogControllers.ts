@@ -1,13 +1,23 @@
-import { Request, Response } from 'express'
+import { query, Request, Response } from 'express'
 import { blogServise } from '../domain/blog-servise'
 import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
 import { OutputBlogType, InputBlogType } from '../input-uotput-types/blog-types'
 import { ObjectId } from 'mongodb'
-
+import { queryBlogRepository } from '../repositories/blogMongoQueryRepository'
+import { OutputPostDBType } from '../input-uotput-types/post-types'
 
 
 
 export const blogControllers = {
+    async getAllBySort(req:Request,res:Response){
+        //const sanitizedQuery =  queryBlogRepository.helper(req.query)
+        const blogs = await blogServise.getAllBlogsBySort(req.query ,/*req.params.blogId*/)
+        if (blogs) {
+            res.status(200).json(blogs)
+        } else {
+            res.status(404).end()
+        }
+    },
     async getAll(req: Request, res: Response<OutputBlogType[]|any>) {
         const blogs = await blogServise.getAllBlogs()
         if (blogs) {
@@ -37,6 +47,20 @@ export const blogControllers = {
 
 
     },
+
+    async createPostInBlog(req: Request , res: Response<OutputErrorsType | OutputPostDBType>) {
+
+
+       /* const insertInfo = await blogServise.createBlogs(req.body)
+        if(insertInfo){
+        const newBlog = await blogServise.findBlogById(insertInfo)
+        if(newBlog){
+        res.status(201).json(newBlog)}}else {res.status(400).end()}*/
+
+
+    },
+
+
 
     async update(req: Request<{ id: string }, {}, InputBlogType>, res: Response<OutputErrorsType | OutputBlogType>) {
         const updateBlog = await blogServise.updateBlogs(new ObjectId(req.params.id), req.body)

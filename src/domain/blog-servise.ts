@@ -2,6 +2,7 @@ import { blogRepository } from '../repositories/blogMongo-repositories'
 import { InputBlogType } from '../input-uotput-types/blog-types'
 import { BlogDBType } from '../db/blog-db-type'
 import { ObjectId } from 'mongodb'
+import { queryBlogRepository } from '../repositories/blogMongoQueryRepository'
 
 export const blogServise = {
     async createBlogs(body: InputBlogType) {
@@ -30,6 +31,12 @@ export const blogServise = {
        
         return blogRepository.getAllBlogs();
     },
+
+    async getAllBlogsBySort(query:any,/*blogId:string*/) {
+       
+        return queryBlogRepository.getMany(query,/*blogId*/)
+    },
+
 
     async updateBlogs(id: ObjectId, body: InputBlogType) {
        return blogRepository.updateBlogs(id,body)
