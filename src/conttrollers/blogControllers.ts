@@ -4,7 +4,8 @@ import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
 import { OutputBlogType, InputBlogType } from '../input-uotput-types/blog-types'
 import { ObjectId } from 'mongodb'
 import { queryBlogRepository } from '../repositories/blogMongoQueryRepository'
-import { OutputPostDBType } from '../input-uotput-types/post-types'
+import { InputPostInBlogType, OutputPostDBType, OutputPostPaginType } from '../input-uotput-types/post-types'
+import { postServise } from '../domain/post-servise'
 
 
 
@@ -27,10 +28,19 @@ export const blogControllers = {
         }
     },
 
-    async find(req: Request<{ id: string }>, res: Response<OutputBlogType>) {
+    async find(req: Request<{ id: string }>, res: Response<OutputBlogType|OutputErrorsType>) {
         const blog = await blogServise.findBlogById(new ObjectId(req.params.id))
         if (blog) {
             res.status(200).json(blog)
+        } else {
+            res.status(404).end()
+        }
+    },
+
+    async findPostsByBlogId(req:Request, res:Response) {
+        const posts = await blogServise.findPostsByBlogId(req.query, req.params.blogId)
+        if (posts) {
+            res.status(200).json(posts)
         } else {
             res.status(404).end()
         }
@@ -43,19 +53,17 @@ export const blogControllers = {
         if(insertInfo){
         const newBlog = await blogServise.findBlogById(insertInfo)
         if(newBlog){
-        res.status(201).json(newBlog)}}else {res.status(400).end()}
+        res.status(201).json(newBlog)}}else {res.status(404).end()}
 
 
-    },
+    4.},
 
-    async createPostInBlog(req: Request , res: Response<OutputErrorsType | OutputPostDBType>) {
-
-
-       /* const insertInfo = await blogServise.createBlogs(req.body)
+    async createPostInBlog(req: Request<{blogId:string},{},InputPostInBlogType> , res: Response<OutputErrorsType | OutputPostDBType>) {
+        const insertInfo = await postServise.createPostInBlog(req.body,req.params.blogId)
         if(insertInfo){
-        const newBlog = await blogServise.findBlogById(insertInfo)
-        if(newBlog){
-        res.status(201).json(newBlog)}}else {res.status(400).end()}*/
+        const newPost = await postServise.findPosts(insertInfo)
+        if(newPost){
+        res.status(201).json(newPost)}}else {res.status(404).end()}
 
 
     },

@@ -31,7 +31,7 @@ export const blogRepository = {
         const blog = await this.findBlogs(id)
         if (blog !== null) {
             return this.mapToOutput(blog as BlogDBType)
-        } else { return false }
+        } else { return null }
     },
 
     mapToOutput(blog: BlogDBType) {

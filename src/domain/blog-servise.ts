@@ -25,6 +25,10 @@ export const blogServise = {
        return  blogRepository.findForOutput(id)
        
     },
+
+    async findPostsByBlogId(query:any, blogId:string){
+        return queryBlogRepository.findByBlogId(query,blogId)
+    },
     
 
     async getAllBlogs() {

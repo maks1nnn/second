@@ -6,7 +6,7 @@ import { authMiddleware } from '../middlewares/authMiddlewares'
 
 export const postsRouter = Router()
 
-postsRouter.get('/', postControllers.getAll)
+postsRouter.get('/', postControllers.getAllBySort)
 postsRouter.get('/:id', postControllers.find)
 postsRouter.post('/',authMiddleware, ...postValidationMiddlewares, inputCheckErrorsMiddleware , postControllers.create)
 postsRouter.put('/:id',authMiddleware, ...postValidationMiddlewares, inputCheckErrorsMiddleware , postControllers.update)

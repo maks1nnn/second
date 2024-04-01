@@ -7,6 +7,15 @@ import { ObjectId } from 'mongodb'
 
 
 export const postControllers = {
+    async getAllBySort(req:Request,res:Response){
+        //const sanitizedQuery =  queryBlogRepository.helper(req.query)
+        const posts = await postServise.getAllPostsBySort(req.query ,/*req.params.blogId*/)
+        if (posts) {
+            res.status(200).json(posts)
+        } else {
+            res.status(404).end()
+        }
+    },
     async getAll(req: Request, res: Response<OutputPostDBType[]>|any) {
         const posts = await postServise.getAllPosts()
         if (posts) {
@@ -17,7 +26,7 @@ export const postControllers = {
     },
 
     async find(req: Request<{ id: string }>, res: Response<OutputPostDBType>) {
-        const post = await postServise.findForOutput(new ObjectId(req.params.id))
+        const post = await postServise.findPosts(new ObjectId(req.params.id))
         if (post) {
             res.status(200).json(post)
         } else {
@@ -29,7 +38,7 @@ export const postControllers = {
 
         const insertInfo = await postServise.createPosts(req.body)
         if(insertInfo){
-        const newBlog = await postServise.findForOutput(insertInfo)
+        const newBlog = await postServise.findPosts(insertInfo)
         if(newBlog){
         res.status(201).json(newBlog)}}else {res.status(400).end()}
 

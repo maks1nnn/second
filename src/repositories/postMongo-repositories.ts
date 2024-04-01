@@ -32,7 +32,7 @@ export const postRepository = {
         const post = await this.findPosts(id)
         if (post !== null) {
             return this.mapToOutput(post as PostDBType)
-        } else { return false }
+        } else { return null }
     },
 
 

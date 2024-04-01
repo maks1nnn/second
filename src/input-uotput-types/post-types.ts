@@ -10,11 +10,34 @@ export type OutputPostDBType = {
     createdAt: string,
 }
 
+export type OutputPostPaginType = {
+    pagesCount: number;
+    page: number;
+    pageSize: number;
+    totalCount: number;
+    items: {
+        id: string;
+        title: string;
+        shortDescription: string;
+        content: string;
+        blogName: string;
+        createdAt: string;
+        blogId: string;
+    }
+}
+
 export type InputPostType = {
     title: string,
     shortDescription: string,
     content: string,
     blogId: string,
+}
+
+export type InputPostInBlogType = {
+    title: string,
+    shortDescription: string,
+    content: string,
+    
 }
 
 export type UpdatePostType = {
