@@ -59,7 +59,7 @@ export const queryBlogRepository = {
 
     async findByBlogId (badquery:any, blogId: string) {
         const query = this.helper(badquery)
-        const byId = {_id: new ObjectId(blogId)}
+        const byId = {blogId: blogId}
         const search = query.searchNameTerm !== null ? { name: { $regex: query.searchNameTerm, $options: 'i' } } : {}
 
         try {

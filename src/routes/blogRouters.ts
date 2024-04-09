@@ -5,7 +5,6 @@ import { blogValidationMiddlewares,  } from '../middlewares/blogsMiddevares'
 import { inputCheckParamsErrorsMiddleware } from '../middlewares/checkParamsReult'
 import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResultMiddlewares'
 import { paramsBlogValidate } from '../middlewares/paramsBlogMiddlewares'
-import { postValidationMiddlewares } from '../middlewares/postsMiddlewares'
 import { postWithBlogValidationMiddlewares } from '../middlewares/postWithBlogIdMiddleware'
 
 
