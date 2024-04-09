@@ -10,6 +10,8 @@ export const SETTINGS ={
         BLOGS: '/blogs',
         POSTS: '/posts',
         TEST: '/testing',
+        USERS: '/users',
+        AUTH: '/auth'
     },
     ADMIN_AUTH: {
         admin:'qwerty'
@@ -18,4 +20,5 @@ export const SETTINGS ={
     DB_NAME: process.env.DB_NAME || "",
     BLOG_COLLECTION_NAME :process.env.BLOG_COLLECTION_NAME || "",
     POST_COLLECTION_NAME :process.env.POST_COLLECTION_NAME|| "",
+    USER_COLLECTION_NAME :process.env.USER_COLLECTION_NAME || "",
 }
