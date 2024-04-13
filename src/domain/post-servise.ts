@@ -27,7 +27,7 @@ export const postServise = {
             createdAt: (new Date()).toISOString()
         };
 
-        return postRepository.createPosts(inputData)
+        return postRepository.createPosts(inputData) 
     },
 
     async createPostInBlog(body:InputPostInBlogType, blogId:string) {
@@ -47,7 +47,7 @@ export const postServise = {
             createdAt: (new Date()).toISOString()
         };
 
-        return postRepository.createPosts(inputData)
+        return postRepository.createPosts(inputData) 
     },
 
 

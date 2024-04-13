@@ -12,6 +12,7 @@ export const db : Db = client.db(SETTINGS.DB_NAME);
 export const postCollection  = db.collection (SETTINGS.POST_COLLECTION_NAME)
 export const blogCollection  = db.collection (SETTINGS.BLOG_COLLECTION_NAME)
 export const userCollection   = db.collection (SETTINGS.USER_COLLECTION_NAME)
+export const authCollection = db.collection(SETTINGS.AUTH_COLLECTION_NAME)
 
 
 export const connectionToDB = async () => {
