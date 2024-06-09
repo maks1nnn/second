@@ -3,4 +3,5 @@ import { authControllers } from "../conttrollers/autControllers";
 
 export const authRouter = Router()
 
-authRouter.post('/', authControllers.checkUser)
+authRouter.post('/login', authControllers.checkUser)
+authRouter.get('/me', authControllers.getMyData)

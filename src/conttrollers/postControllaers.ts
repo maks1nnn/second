@@ -60,6 +60,14 @@ export const postControllers = {
         } else {
             res.status(404).end()
         }
+    },
+
+    async createPostComment(){
+
+    },
+
+    async getAllPostComments() {
+
     }
 
 

@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { authServise } from "../domain/auth-servise"
 
 
 export const authControllers = {
@@ -9,6 +10,10 @@ export const authControllers = {
         }else{
             res.status(401).end()
         }
+        
+    },
+
+    async getMyData(){
         
     }
 }

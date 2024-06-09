@@ -24,7 +24,7 @@ export const userServise = {
             const newUser = await userRepository.findUser(userId)
             return newUser;
         } else {
-            return null; // или обработайте ошибку соответствующим образом
+            return false; // или обработайте ошибку соответствующим образом
         }
     },
 
@@ -34,8 +34,12 @@ export const userServise = {
 
     async findById (id:ObjectId) {
         return userRepository.findUser(id)
-    }
+    },
+   
+   
 }
+
+
 
 
 

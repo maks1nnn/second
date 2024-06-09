@@ -12,7 +12,7 @@ export const userRepository = {
             return insertInfo.insertedId; // Возвращаем ID созданного пользователя
         } catch (e) {
             console.log(e)
-            return null; // или обработайте ошибку соответствующим образом
+            return false; // или обработайте ошибку соответствующим образом
         }
     },
 
@@ -36,5 +36,18 @@ export const userRepository = {
     async deleteUser (id: ObjectId){
         const result = await userCollection.deleteOne({_id: id})
         return result.deletedCount === 1
-    }
+    },
+    async findByLogin(data:any){
+        const checkUser = await userCollection.findOne({login: data})
+        console.log(checkUser)
+        if(checkUser){return checkUser.passwordHash } else{return false} 
+    },
+    async findByEmail (data: any){
+        const checkUser = await userCollection.findOne({email: data})
+        console.log(checkUser)
+        if(checkUser){return   checkUser.passwordHash } else{return false} 
+    },
+
+
+        
 }
