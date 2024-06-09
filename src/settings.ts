@@ -1,4 +1,5 @@
 import {config} from 'dotenv'
+
 config()
 
 export const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
@@ -11,7 +12,8 @@ export const SETTINGS ={
         POSTS: '/posts',
         TEST: '/testing',
         USERS: '/users',
-        AUTH: '/auth'
+        AUTH: '/auth',
+        COMMENT: '/comments'
     },
     ADMIN_AUTH: {
         admin:'qwerty'
@@ -22,4 +24,5 @@ export const SETTINGS ={
     POST_COLLECTION_NAME :process.env.POST_COLLECTION_NAME|| "",
     USER_COLLECTION_NAME :process.env.USER_COLLECTION_NAME || "",
     AUTH_COLLECTION_NAME :process.env.AUTH_COLLECTION_NAME || "",
+
 }
