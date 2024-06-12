@@ -37,15 +37,25 @@ export const userRepository = {
         const result = await userCollection.deleteOne({_id: id})
         return result.deletedCount === 1
     },
-    async findByLogin(data:any){
-        const checkUser = await userCollection.findOne({login: data})
-        console.log(checkUser)
-        if(checkUser){return checkUser.passwordHash } else{return false} 
+
+    async findByLogin(login: string) {
+        const checkUser = await userCollection.findOne({ login });
+        if (checkUser) {
+            return {
+                hash: checkUser.passwordHash,
+                id: checkUser._id.toString(),
+            };
+        }
+        return false;
     },
+
+    
     async findByEmail (data: any){
         const checkUser = await userCollection.findOne({email: data})
         console.log(checkUser)
-        if(checkUser){return   checkUser.passwordHash } else{return false} 
+        if(checkUser){return {hash: checkUser.passwordHash,
+            id: checkUser._id.toString(),
+        }} else{return false}  
     },
 
 

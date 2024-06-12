@@ -10,15 +10,15 @@ export const authServise = {
         if (UserValidationRules.loginPattern.test(body.loginOrEmail)) {
             const checkUser = await userRepository.findByLogin(body.loginOrEmail)
 
-            if (checkUser) {
-                return bcryptServise.checkPassword(body.password, checkUser)
+            if (checkUser !== false && await bcryptServise.checkPassword(body.password, checkUser.hash)) {
+                return checkUser
             }
         } else if (UserValidationRules.emailPattern.test(body.loginOrEmail)) {
             const checkUser = await userRepository.findByEmail(body.loginOrEmail)
-
-            if (checkUser) {
-                return bcryptServise.checkPassword(body.password, checkUser)
+            if (checkUser !== false && await bcryptServise.checkPassword(body.password, checkUser.hash)) {
+                return checkUser
             }
+
         } else { return null }
     }
 }
