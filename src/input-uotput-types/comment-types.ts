@@ -3,7 +3,7 @@
   export type OutputCommentType = {
     id: string,
     content: string,
-    commentInfo: {
+    commentatorInfo: {
         userId: string,
         userLogin: string,
     },

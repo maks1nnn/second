@@ -20,7 +20,14 @@ export const authServise = {
             }
 
         } else { return null }
+    },
+    async userByToken (body:any){
+    const isUser = await this.checkUser(body)
+    if(isUser){
+        return isUser.id 
     }
+
+    },
 }
 
 

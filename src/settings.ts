@@ -25,6 +25,6 @@ export const SETTINGS ={
     USER_COLLECTION_NAME :process.env.USER_COLLECTION_NAME || "",
     AUTH_COLLECTION_NAME :process.env.AUTH_COLLECTION_NAME || "",
     COMMENT_COLLECTION_NAME : process.env.COMMENT_COLLECTION_NAME || "",
-    AC_SECRET : process.env.AC_SECRET as string,
-    AC_TIME: process.env.AC_TIME as string ,
+    AC_SECRET :  "123",
+    AC_TIME:  "1h" ,
 }
