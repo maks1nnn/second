@@ -3,6 +3,9 @@ import { postServise } from '../domain/post-servise'
 import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
 import { OutputPostDBType, InputPostType } from '../input-uotput-types/post-types'
 import { ObjectId } from 'mongodb'
+import { InputCommentType, OutputCommentType } from '../input-uotput-types/comment-types'
+import { commentService } from '../domain/comment-servise'
+import { queryCommentRepository } from '../repositories/commentMongoQueryRepositories'
 
 
 
@@ -62,12 +65,24 @@ export const postControllers = {
         }
     },
 
-    async createPostComment(){
-
+    async createPostComment(req:Request<{id:string}, {}, InputCommentType>, res: Response<OutputCommentType| OutputErrorsType>){
+        const createComment = await commentService.createComment(req.params.id , req.body.content, req.userId)
+        if(createComment){
+            const newComment = await commentService.getCommentById(createComment) 
+            if (newComment){
+            res.status(200).json(newComment)
+        }else{
+            res.status(404).end()}}
+       
     },
 
-    async getAllPostComments() {
-
+    async getAllPostComments(req: Request,res: Response) {
+        const getAll = await queryCommentRepository.getAllUsers(req.params)
+        if(getAll){
+            res.status(200).json(getAll)
+        }else{
+            res.status(404).end()
+        }
     }
 
 
