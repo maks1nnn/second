@@ -8,6 +8,6 @@ export type CommentDBType = {
         userId: string,
         userLogin: string,
     },
-    createAt: string
+    createdAt: string
 
 }

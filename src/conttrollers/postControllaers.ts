@@ -69,22 +69,27 @@ export const postControllers = {
         const createComment = await commentService.createComment(req.params.id , req.body.content, req.userId)
         if(createComment){
             const newComment = await commentService.getCommentById(createComment) 
+            console.log(newComment)
             if (newComment){
-            res.status(200).json(newComment)
+            res.status(201).json(newComment)
         }else{
             res.status(404).end()}}
        
     },
 
-    async getAllPostComments(req: Request,res: Response) {
-        const getAll = await queryCommentRepository.getAllUsers(req.params)
-        if(getAll){
+    async getAllPostComments(req: Request, res: Response) {
+        const isPost = await postServise.findPosts(new ObjectId(req.params.postId))
+        if (!isPost) {
+            return res.status(404).end() // добавляем return, чтобы остановить выполнение функции
+        }
+    
+        const getAll = await queryCommentRepository.getAllUsers(req.params.postId, req.query)
+        if (getAll) {
             res.status(200).json(getAll)
-        }else{
+        } else {
             res.status(404).end()
         }
     }
-
 
 
 }

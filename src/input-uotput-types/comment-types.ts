@@ -1,4 +1,6 @@
 
+  import { ResultStatus } from "./resultCode"
+
 
   export type OutputCommentType = {
     id: string,
@@ -7,7 +9,7 @@
         userId: string,
         userLogin: string,
     },
-    createAt: string
+    createdAt: string
   }
 
   export type InputCommentType = {
@@ -21,4 +23,10 @@
   export const CommentyValidatorRules = {
     maxLength: 300,
     minLength: 20,
+  }
+
+  export type Result<T = null> = {
+    status: ResultStatus;
+    errorMessage?: string;
+    data: T
   }

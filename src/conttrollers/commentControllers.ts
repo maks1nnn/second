@@ -6,19 +6,24 @@ import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
 
 
 export const commentControllers = {
-    async updateCommentById(req:Request<{id: string},{},InputCommentType>,res:Response<OutputCommentType>){
-        const updateComment = await commentService.updateComment(new ObjectId(req.params.id),req.body.content)
-        if(updateComment){
+    async updateCommentById(req:Request<{id: string},{},InputCommentType>,res:Response ){
+        const updateComment = await commentService.updateComment(new ObjectId(req.params.id),req.body,req.userId )
+        if(updateComment.status === "Sucsess"){
             res.status(204).end()
-        }else{
-            res.status(404).end()}
+        }else if(updateComment.status === "Forbidden" ){
+            res.status(403).end()
+        }else if(updateComment.status === "BadRequest" ){
+            res.status(404).end()
+        }
     },
-    async deleteCommentById(req:Request<{id:string}>, res:Response<OutputCommentType>){
-        const isDelete = await commentService.deleteComment(new ObjectId(req.params.id))
-        if(isDelete){
+    async deleteCommentById(req:Request<{id:string}>, res:Response ){
+        const isDelete = await commentService.deleteComment(new ObjectId(req.params.id),req.userId)
+        if(isDelete.status === "Sucsess"){
             res.status(204).end()
-        }else{
-            res.status(404).end
+        }else if(isDelete.status === "Forbidden" ){
+            res.status(403).end()
+        }else if(isDelete.status === "NotFound" ){
+            res.status(404).end()
         }
     },
     async getCommentById(req:Request<{id:string}>,res:Response<OutputCommentType| OutputErrorsType>){

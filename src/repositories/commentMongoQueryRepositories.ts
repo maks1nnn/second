@@ -10,23 +10,15 @@ export const queryCommentRepository = {
             sortDirection: query.sortDirection ? query.sortDirection : "desc",
             pageNumber: query.pageNumber ? +query.pageNumber : 1,
             pageSize : query.pageSize ? +query.pageSize : 10,
-            searchLoginTerm: query.searchLoginTerm ? query.searchLoginTerm : null,
-            searchEmailTerm: query.searchEmailTerm ? query.searchEmailTerm : null, 
+            
         }
     },
 
-    async getAllUsers(badQuery: any){
+    async getAllUsers(postId:string, badQuery :any ){
         const query = this.helper(badQuery)
 
-        const searchLogin = query.searchLoginTerm !== null ? {login: { $regex: query.searchLoginTerm, $options: 'i'}} : {}
-        const searchEmail = query.searchEmailTerm !== null ? {email: { $regex: query.searchEmailTerm, $options: 'i'}} : {}
-
-        const filter = {
-            $or:[
-                {...searchEmail},
-                {...searchLogin}
-            ]
-        }
+        
+        const filter = { postId: { $regex: postId, $options: 'i'} };
 
         try {
             const comments = await commentCollection
@@ -45,11 +37,15 @@ export const queryCommentRepository = {
                 totalCount: c,
                 items: comments.map(comment => ({
                     id: comment._id.toString(),
-                    login: comment.login,
-                    email: comment.email,
+                    content: comment.content,
+                    commentatorInfo: {
+                        userId: comment.commentatorInfo.userId,
+                        userLogin: comment.commentatorInfo.userLogin,
+                    },
                     createdAt: comment.createdAt
                 }))
 
+                 
             }
 
         }catch (e) {

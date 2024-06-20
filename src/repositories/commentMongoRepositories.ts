@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb'
 import { CommentDBType } from '../db/comment-db-types'
 import { commentCollection } from '../db/mongo-db'
+import { InputCommentType } from '../input-uotput-types/comment-types';
 
 
 export const commentRepository = {
@@ -27,10 +28,10 @@ export const commentRepository = {
        }
     },
 
-    async updateComment(id:ObjectId, content:string) {
+    async updateComment(id:ObjectId,  body: InputCommentType ) {
         const result = await commentCollection.updateOne({_id: id}, {
             $set: {
-                content: content,
+                content: body.content,
             }
         })
         return result.modifiedCount === 1
@@ -44,12 +45,12 @@ export const commentRepository = {
     mapToOutput(comment : CommentDBType){
         return{
             id: comment._id.toString(),
-            content: comment.content,
+            content: comment.content, 
             commentatorInfo: {
                 userId: comment.commentatorInfo.userId,
                 userLogin: comment.commentatorInfo.userLogin,
             },
-            createAt: comment.createAt,
+            createdAt: comment.createdAt,
         }
     },
 }
