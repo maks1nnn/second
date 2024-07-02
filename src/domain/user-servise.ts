@@ -1,6 +1,8 @@
 import { ObjectId } from "mongodb";
 import { userRepository } from "../repositories/userMongoRepository"
 import { bcryptServise } from "./hashServise";
+import { randomUUID } from "crypto";
+import {add} from "date-fns";
 
 
 
@@ -14,10 +16,19 @@ export const userServise = {
     
         const inputData = {
             login: body.login,
-            passwordHash: passwordHash,
-            email: body.email, 
-            createdAt: (new Date()).toISOString(),                     
-        }
+            email: body.email,
+            passwordHash,
+            createdAt: (new Date()).toISOString(),
+            emailConfirmation: {
+                confirmationCode: randomUUID(),
+                expirationDate: add(new Date(), {
+                    hours: 1,
+                    minutes: 30,
+                }),
+                isConfirmed: false,
+            },
+    
+        };
     
         const userId = await userRepository.createUser(inputData)
         if (userId) {

@@ -1,11 +1,18 @@
 
 export type UserDBType = {
 
-id: string,
-login: string,
-email: string,
-createdAt: string,
+    login: string,
+    email: string,
+    passwordHash: string,
+    createdAt: string,
+    emailConfirmation: {
+        confirmationCode: string,
+        expirationDate: Date,
+        isConfirmed: boolean,
+    },
 }
+
+
 
 export type UserInputType = {
     login: string,
@@ -15,9 +22,9 @@ export type UserInputType = {
 }
 
 export type UserOutputType = {
-    
-        id: string,
-        login: string,
-        email: string,
-        createdAt: string,
+
+    id: string,
+    login: string,
+    email: string,
+    createdAt: string,
 }

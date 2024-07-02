@@ -14,3 +14,7 @@ export type OutputAuthType = {
     accessToken: string
 }
 
+export type InputRegistrationType = {
+    
+}
+

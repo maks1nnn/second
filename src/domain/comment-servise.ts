@@ -6,13 +6,14 @@ import { ResultStatus } from "../input-uotput-types/resultCode"
 
 
 export const commentService = {
-    async createComment(id:string , content: string, userId :any)   {
+    async createComment(postId:string , content: string, userId :any)   {
         
         const user = await userRepository.findUser(new ObjectId(userId))
         if(user !== null){
 
         const inputData = {
-            postId: id,
+            _id: new ObjectId(),
+            postId: new ObjectId(postId),
             content: content,
             commentatorInfo: {
                 userId: user.id ,
@@ -29,21 +30,28 @@ export const commentService = {
             return null}}
     },
 
-    async updateComment(id: ObjectId , body: InputCommentType, userId: any):Promise<Result> {
-       const isComment = await  this.getCommentById(id)
+    async updateComment(commentId: ObjectId , body: InputCommentType, userId: any):Promise<Result> {
+       const isComment = await  this.getCommentById(commentId)
        if(isComment !== false){
+        console.log(userId)
+        console.log(isComment.commentatorInfo.userId)
         if(isComment.commentatorInfo.userId !== userId){
             return {
                 status: ResultStatus.Forbidden,
-                
                 data:null
             }
+        }
+       }else{
+        return {
+            status: ResultStatus.NotFound,
+            
+            data:null
         }
        }  
        
        
        
-        const update = await commentRepository.updateComment(id, body)
+        const update = await commentRepository.updateComment(commentId, body)
         if (update) {
             return {
                 status: ResultStatus.Success,
@@ -51,13 +59,13 @@ export const commentService = {
             }
         } else {
             return {
-                status: ResultStatus.BadRequest,
+                status: ResultStatus.Forbidden,
                 data: null
             }
         }
     },
 
-    async deleteComment(id: ObjectId,userId:any ): Promise<Result> {
+    async deleteComment(id: ObjectId,userId:string | null): Promise<Result> {
         const isComment = await  this.getCommentById(id)
        if(isComment !== false){
         if(isComment.commentatorInfo.userId !== userId){
@@ -66,10 +74,13 @@ export const commentService = {
                 data: null
             }
         }
-       }else {return {
-        status: ResultStatus.NotFound,
-        data: null
-       }}
+       }else{
+        return {
+            status: ResultStatus.NotFound,
+            
+            data:null
+        }
+       }  
 
 
         const isDelete = await commentRepository.deleteComment(id)
@@ -80,7 +91,7 @@ export const commentService = {
             }
         } else {
             return {
-                status: ResultStatus.NotFound,
+                status: ResultStatus.Forbidden,
                 data: null
             }
         }

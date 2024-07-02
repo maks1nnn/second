@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb'
 import { InputCommentType, OutputCommentType } from '../input-uotput-types/comment-types'
 import { commentService } from '../domain/comment-servise'
 import { queryCommentRepository } from '../repositories/commentMongoQueryRepositories'
+import { ResultStatus } from '../input-uotput-types/resultCode'
 
 
 
@@ -65,8 +66,15 @@ export const postControllers = {
         }
     },
 
-    async createPostComment(req:Request<{id:string}, {}, InputCommentType>, res: Response<OutputCommentType| OutputErrorsType>){
-        const createComment = await commentService.createComment(req.params.id , req.body.content, req.userId)
+    async createPostComment(req:Request<{postId:string}, {}, InputCommentType>, res: Response<OutputCommentType| OutputErrorsType>){
+        const isPost = await postServise.findPosts(new ObjectId(req.params.postId))
+        if ( isPost === null) {
+            return res.status(404).end() // добавляем return, чтобы остановить выполнение функции
+        }
+        const createComment = await commentService.createComment(req.params.postId , req.body.content, req.userId)
+        if (req.userId === null){
+            res.status(401).end()
+        }
         if(createComment){
             const newComment = await commentService.getCommentById(createComment) 
             console.log(newComment)
@@ -79,11 +87,11 @@ export const postControllers = {
 
     async getAllPostComments(req: Request, res: Response) {
         const isPost = await postServise.findPosts(new ObjectId(req.params.postId))
-        if (!isPost) {
+        if ( isPost === null) {
             return res.status(404).end() // добавляем return, чтобы остановить выполнение функции
         }
     
-        const getAll = await queryCommentRepository.getAllUsers(req.params.postId, req.query)
+        const getAll = await queryCommentRepository.getAllUsers(new ObjectId(req.params.postId), req.query)
         if (getAll) {
             res.status(200).json(getAll)
         } else {

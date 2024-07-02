@@ -8,3 +8,9 @@ export const UserValidationRules = {
     passwordMinLength: 6,
     emailPattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
 }
+
+export type InputUserType = {
+    login: string,
+    password: string,
+    email: string,
+}

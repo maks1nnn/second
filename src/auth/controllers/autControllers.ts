@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { ObjectId } from "mongodb"
-import { authServise } from "../domain/auth-servise"
-import { jwtServise } from "../domain/jwt-servise"
+import { authServise } from "../servise/auth-servise"
+import { jwtServise } from "../../domain/jwt-servise"
 
 
 export const authControllers = {
@@ -32,5 +32,17 @@ export const authControllers = {
 
     async getMyData() {
 
-    }
+    },
+
+    async registrationConfirmation() {
+
+    },
+
+    async registration () {
+
+    },
+
+    async registrationEmailResending (){
+
+    },
 }

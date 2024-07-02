@@ -1,4 +1,5 @@
 
+import { ObjectId } from "mongodb";
 import { commentCollection } from "../db/mongo-db";
 
 
@@ -6,7 +7,7 @@ export const queryCommentRepository = {
 
     helper(query:any){
         return {
-            sortBy: query.sortBy ? query.sortBy : "createAt",
+            sortBy: query.sortBy ? query.sortBy : "createdAt",
             sortDirection: query.sortDirection ? query.sortDirection : "desc",
             pageNumber: query.pageNumber ? +query.pageNumber : 1,
             pageSize : query.pageSize ? +query.pageSize : 10,
@@ -14,16 +15,19 @@ export const queryCommentRepository = {
         }
     },
 
-    async getAllUsers(postId:string, badQuery :any ){
+    async getAllUsers(postId:ObjectId, badQuery :any ){
         const query = this.helper(badQuery)
+        const byId = postId ? {postId: new ObjectId(postId)} : {}
+         
+
 
         
-        const filter = { postId: { $regex: postId, $options: 'i'} };
+        const filter = { ...byId };
 
         try {
             const comments = await commentCollection
             .find(filter)
-            .sort(query.sortBy, query.sortDirection)
+            .sort({ [query.sortBy]: query.sortDirection === 'desc' ? -1 : 1 })
             .skip((query.pageNumber - 1) * query.pageSize)
             .limit(query.pageSize)
             .toArray()
