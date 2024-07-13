@@ -6,14 +6,14 @@ import { queryUserRepository } from "../../repositories/userMongoQueryRepository
 import { ResultStatus } from "../../input-uotput-types/resultCode"
 
 
-export const registrationConfirmationController = async (req:Request,res:Response) => {
+export const registrationController = async (req:Request,res:Response) => {
     try{
         const result = await authServise.registrationUser(req.body)
         if (result.status === ResultStatus.BadRequest){
-            res.status(404).send(result)
-            return
+            res.status(400).send({errorsMessages:result.extensions})
+             
         }
-        res.status(204).send()
+        if(result.status === ResultStatus.Success){res.status(204).send()}
     }catch (err) {
         console.error(err)
         res.status(502).send()

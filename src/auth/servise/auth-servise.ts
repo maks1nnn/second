@@ -21,6 +21,7 @@ export const authServise = {
         if (userByEmail) {
             return {
                 status: ResultStatus.BadRequest,
+                extensions: [{field: "email", message: "This email already exists in database" }],
                 data: null
             }
         }
@@ -28,6 +29,7 @@ export const authServise = {
         if (userByLogin) {
             return {
                 status: ResultStatus.BadRequest,
+                extensions:[{field: "login", message:"this login already exists in database"}],
                 data: null
             }
         }
@@ -61,7 +63,7 @@ export const authServise = {
             return {
                 status: ResultStatus.BadRequest,
                 data: null,
-                errorMessage: 'Failed to send confirmation email',
+                extensions:[{field: "email", message:'Failed to send confirmation email'}],
             };
         }
 
@@ -75,10 +77,10 @@ export const authServise = {
 
     async confirmRegistration(input: string): Promise<Result<null | boolean>> {
         const isUser = await userRepository.findUserByConfirmationCode(input)
-        if (!isUser) {
+        if ( isUser === false) {
             return {
                 status: ResultStatus.BadRequest,
-                extensions: [{ field: 'code', message: 'invalid confirmation code' }],
+                extensions: [{ field: 'code', message: 'invalid confirmation code sorry' }],
                 data: null
             }
         }
@@ -101,25 +103,32 @@ export const authServise = {
 
         const isConfirmed: boolean = true
 
-        await userRepository.updateUserIsConfirmed(isUser._id, isConfirmed)
-
+       const updateConfirm =  await userRepository.updateUserIsConfirmed(isUser._id, isConfirmed)
+        if(!updateConfirm){
+            return {
+                status: ResultStatus.BadRequest,
+                extensions: [{ field: 'code', message: 'database not work' }],
+                data: null,
+            } 
+        }
         return {
             status: ResultStatus.Success,
             data: null
         }
     },
 
-    async registrationEmailResending(input: string): Promise<Result> {
-        const isUser = await userRepository.findByEmail(input)
+    async registrationEmailResending(email: string): Promise<Result> {
+        const isUser  = await userRepository.findByEmail(email)
         if (!isUser) {
             return {
                 status: ResultStatus.BadRequest,
-                extensions: [{ field: 'email', message: 'Email already confirmed' }],
+                extensions: [{ field: 'email', message: 'Email not exist' }],
                 data: null
             }
         }
-
-        if (isUser.emailConfirmation.isConfirmed) {
+        const userConfirm = isUser.emailConfirmation.isConfirmed
+        console.log(userConfirm)
+        if (  userConfirm === true ) {
             return {
                 status: ResultStatus.BadRequest,
                 extensions: [{ field: 'email', message: 'Email already confirmed' }],
@@ -135,13 +144,28 @@ export const authServise = {
 
 
 
-        await userRepository.updateUserConfirmInfo(isUser._id, newConfirmationCode, newExpirationDate)
+        const newCode = await userRepository.updateUserConfirmInfo(isUser._id, newConfirmationCode, newExpirationDate)
+        if (!newCode)
+        return {
+            status: ResultStatus.BadRequest,
+            data: null,
+            extensions:[{field: "code", message:"this code already exists in database"}],
+        };
 
-        await nodemailerService.sendEmail(
-            input,
+
+        const emailSent = await nodemailerService.sendEmail(
+            email,
             newConfirmationCode,
             registrationEmailTemplate 
         )
+
+        if (!emailSent) {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null,
+                extensions:[{field: "email", message:'Failed to send confirmation email'}],
+            };
+        }
 
         return {
             status: ResultStatus.Success,
@@ -151,9 +175,10 @@ export const authServise = {
 
     async loginUser(input: InputAuthType): Promise<Result<string|null>> {
         const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
-        if (!user || !(await bcryptServise.checkPassword(input.password, user.passwordHash))) {
+        if (!user || !(await bcryptServise.checkPassword(input.password, user.passwordHash)) ) {
             return {
                 status: ResultStatus.BadRequest,
+                extensions:[{field: "code", message:'Failed to send confirmation email pasword'}],
                 data: null
             }
         }
@@ -161,6 +186,7 @@ export const authServise = {
         if (!user.emailConfirmation.isConfirmed) {
             return {
                 status: ResultStatus.BadRequest,
+                extensions:[{field: "code", message:'Failed to send confirmation email'}],
                 data: null
             }
         }

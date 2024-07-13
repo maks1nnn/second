@@ -9,14 +9,16 @@ export const loginController = async (req: Request,res:Response) => {
     try{
         const result = await authServise.loginUser(req.body)
         if(result.status === ResultStatus.BadRequest){
-            res.status(404).send({
-                errorMessages: result.extensions || []
-            })
-            return
+            res.status(400).send({
+                errorsMessages: result.extensions 
+                 
+              })
+              return
+             
         }
-        res.status(200).send({
+        if(result.status === ResultStatus.Success){ res.status(200).send({
             accessToken: result.data!
-        })
+        })}
     } catch (err) {
         console.error(err)
         res.status(502).send()

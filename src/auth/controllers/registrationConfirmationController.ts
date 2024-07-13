@@ -8,9 +8,9 @@ import { ResultStatus } from "../../input-uotput-types/resultCode"
 
 export const registrationConfirmationController = async (req:Request,res:Response) => {
     try{
-        const result = await authServise.confirmRegistration(req.body)
+        const result = await authServise.confirmRegistration(req.body.code)
         if (result.status === ResultStatus.BadRequest){
-            res.status(404).send()
+            res.status(400).send({errorsMessages: result.extensions})
             return
         }
         res.status(204).send()

@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb"
 import { userCollection } from "../db/mongo-db"
+import { UserDBType } from "../db/user-db-types";
 import { UserValidationRules } from "../input-uotput-types/user-types";
 
 
@@ -33,8 +34,8 @@ export const userRepository = {
         return result.deletedCount === 1
     },
 
-    async findByLogin(login: string) {
-        const checkUser = await userCollection.findOne({ login });
+    async findByLogin(data: string) {
+        const checkUser = await userCollection.findOne({login: data });
         if (checkUser) {
             return checkUser
         }
@@ -42,7 +43,7 @@ export const userRepository = {
     },
 
 
-    async findByEmail(data: any) {
+    async findByEmail(data: string) {
         const checkUser = await userCollection.findOne({ email: data })
         console.log(checkUser)
         if (checkUser) {
@@ -51,7 +52,8 @@ export const userRepository = {
     },
 
     async findUserByConfirmationCode(code: string) {
-        const user = await userCollection.findOne({ confirmationCode: code })
+        console.log(code)
+        const user = await userCollection.findOne({ "emailConfirmation.confirmationCode" : code })
 
         if (user) {
             return user
@@ -76,17 +78,12 @@ export const userRepository = {
                 "emailConfirmation.expirationDate" : confirmDate,
             }
         })
+        return result.modifiedCount === 1
     },
 
     async findByEmailOrLogin(body: any) {
-        if (UserValidationRules.loginPattern.test(body.loginOrEmail)) {
-            const checkUser = await this.findByLogin(body.loginOrEmail)
-            return checkUser
-
-        } else if (UserValidationRules.emailPattern.test(body.loginOrEmail)) {
-            const checkUser = await this.findByEmail(body.loginOrEmail)
-            return checkUser
-        } else { return null }
+        const user = await userCollection.findOne({or: [{login : body}, {email: body}]})
+        return user
     },
 
 
