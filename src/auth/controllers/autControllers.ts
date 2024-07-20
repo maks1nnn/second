@@ -4,7 +4,7 @@ import { authServise } from "../servise/auth-servise"
 import { jwtServise } from "../../domain/jwt-servise"
 
 
-export const authControllers = {
+/*export const authControllers = {
     async checkUser(req: Request, res: Response) {
         const isUser = await authServise.checkUser(req.body)
         if (isUser) {
@@ -45,4 +45,4 @@ export const authControllers = {
     async registrationEmailResending (){
 
     },
-}
+}*/

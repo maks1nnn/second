@@ -5,11 +5,12 @@ import { InputUserType, UserValidationRules } from "../../input-uotput-types/use
 import { userRepository } from "../../repositories/userMongoRepository";
 import { bcryptServise } from "../../domain/hashServise";
 import { nodemailerService } from "../../common/adapters/nodemailer-adapter"; 
-import { Result } from "../../input-uotput-types/comment-types";
+import { Result } from "../../comments/types/comment-types";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { InputAuthType } from "../types/auth-types";
 import { jwtServise } from "../../domain/jwt-servise";
 import { registrationEmailTemplate } from "../../common/email-temp;ates/registrationEmailTemplate";
+import { InferIdType, ObjectId } from "mongodb";
 
 
 
@@ -175,7 +176,9 @@ export const authServise = {
 
     async loginUser(input: InputAuthType): Promise<Result<string|null>> {
         const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
-        if (!user || !(await bcryptServise.checkPassword(input.password, user.passwordHash)) ) {
+        if (user !== null ){ console.log("userLOGIN: " + user.login  )} 
+       if (user !== null ){ console.log("userLOGIN: " + user.emailConfirmation.isConfirmed  )}
+        if (user === null || !(await bcryptServise.checkPassword(input.password, user.passwordHash)) ) {
             return {
                 status: ResultStatus.BadRequest,
                 extensions:[{field: "code", message:'Failed to send confirmation email pasword'}],
@@ -183,13 +186,13 @@ export const authServise = {
             }
         }
          
-        if (!user.emailConfirmation.isConfirmed) {
+       /* if (user.emailConfirmation.isConfirmed === false) {
             return {
-                status: ResultStatus.BadRequest,
+                status: ResultStatus.Forbidden,
                 extensions:[{field: "code", message:'Failed to send confirmation email'}],
                 data: null
             }
-        }
+        }*/
 
 
         const jwtPayload =  user._id.toString()
@@ -201,6 +204,43 @@ export const authServise = {
             data: token
         }
     },
+    async checkAccessToken (authHeader: string): Promise<Result<IdType| null>> {
+        const schema = authHeader.split(" ")[0]
+        if(schema !== "Bearer"){
+            return { 
+                status: ResultStatus.Unauthorized,
+                errorMessage: "wrong auth",
+                data: null, 
+
+            }
+        }
+        const token = authHeader.split(" ")[1]
+        const payload = await jwtServise.verifyToken(token)
+        if (payload) {
+            const {userId} = payload;
+
+            const user = await userRepository.findUser(new ObjectId(userId))
+
+            if(!user){
+                return {
+                    status: ResultStatus.Unauthorized,
+                    errorMessage: "user not found",
+                    data:null
+                }
+
+                 return {
+                    status: ResultStatus.Success,
+                    data: {id:userId}
+                 }
+            }
+            
+        }
+        return {
+            status : ResultStatus.Unauthorized,
+            errorMessage: "wrong auth",
+            data:null,
+        }
+    }
 }
 
 

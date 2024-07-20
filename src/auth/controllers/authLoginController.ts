@@ -9,7 +9,15 @@ export const loginController = async (req: Request,res:Response) => {
     try{
         const result = await authServise.loginUser(req.body)
         if(result.status === ResultStatus.BadRequest){
-            res.status(400).send({
+            res.status(401).send({
+                errorsMessages: result.extensions 
+                 
+              })
+              return
+             
+        }
+        if(result.status === ResultStatus.Forbidden){
+            res.status(403).send({
                 errorsMessages: result.extensions 
                  
               })

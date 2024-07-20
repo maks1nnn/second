@@ -1,5 +1,5 @@
 import { db } from '../db/db'
-import { postCollection, blogCollection, userCollection, authCollection } from '../db/mongo-db'
+import { postCollection, blogCollection, userCollection, authCollection, commentCollection } from '../db/mongo-db'
 
 export const testRepository = {
     
@@ -11,6 +11,7 @@ export const testRepository = {
       blogCollection.deleteMany({})
       userCollection.deleteMany({})
       authCollection.deleteMany({})
+      commentCollection.deleteMany({})
        return true
 },
 }

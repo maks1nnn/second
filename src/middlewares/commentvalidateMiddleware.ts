@@ -1,5 +1,5 @@
 import {body} from "express-validator"
-import { CommentyValidatorRules } from "../input-uotput-types/comment-types"
+import { CommentyValidatorRules } from "../comments/types/comment-types"
 
 export const commentValidatorMiddlewares = [
     body('content')

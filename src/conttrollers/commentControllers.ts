@@ -1,7 +1,7 @@
 import {query, Request, Response} from 'express'
 import { ObjectId } from 'mongodb'
 import { commentService } from '../domain/comment-servise'
-import { InputCommentType, OutputCommentType } from '../input-uotput-types/comment-types'
+import { InputCommentType, OutputCommentType } from '../comments/types/comment-types'
 import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
 import { ResultStatus } from '../input-uotput-types/resultCode'
 
@@ -18,7 +18,7 @@ export const commentControllers = {
         }
     },
     async deleteCommentById(req:Request<{commentId :string}>, res:Response ){
-        const isDelete = await commentService.deleteComment(new ObjectId(req.params.commentId ),req.userId)
+        const isDelete = await commentService.deleteComment(new ObjectId(req.params.commentId),req.userId)
         if(isDelete.status === "Sucsess"){
             res.status(204).end()
         }else if(isDelete.status === "Forbidden" ){

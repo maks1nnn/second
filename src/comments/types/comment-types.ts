@@ -1,5 +1,5 @@
 
-  import { ResultStatus } from "./resultCode"
+  import { ResultStatus } from "../../input-uotput-types/resultCode"
 
 
   export type OutputCommentType = {

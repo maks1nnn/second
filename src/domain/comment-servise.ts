@@ -1,7 +1,7 @@
 import { commentRepository } from "../repositories/commentMongoRepositories"
 import { ObjectId } from 'mongodb'
 import { userRepository } from "../repositories/userMongoRepository"
-import { InputCommentType, Result } from "../input-uotput-types/comment-types"
+import { InputCommentType, Result } from "../comments/types/comment-types"
 import { ResultStatus } from "../input-uotput-types/resultCode"
 
 
@@ -16,7 +16,7 @@ export const commentService = {
             postId: new ObjectId(postId),
             content: content,
             commentatorInfo: {
-                userId: user.id ,
+                userId: user._id ,
                 userLogin: user.login ,
             },
             createdAt: (new Date()).toISOString(),
@@ -33,15 +33,15 @@ export const commentService = {
     async updateComment(commentId: ObjectId , body: InputCommentType, userId: any):Promise<Result> {
        const isComment = await  this.getCommentById(commentId)
        if(isComment !== false){
-        console.log(userId)
-        console.log(isComment.commentatorInfo.userId)
-        if(isComment.commentatorInfo.userId !== userId){
+        
+        if(isComment.commentatorInfo.userId.toString() !== userId){
             return {
                 status: ResultStatus.Forbidden,
                 data:null
             }
         }
-       }else{
+       }
+       if (isComment === false){
         return {
             status: ResultStatus.NotFound,
             
@@ -68,13 +68,14 @@ export const commentService = {
     async deleteComment(id: ObjectId,userId:string | null): Promise<Result> {
         const isComment = await  this.getCommentById(id)
        if(isComment !== false){
-        if(isComment.commentatorInfo.userId !== userId){
+        if(isComment.commentatorInfo.userId.toString() !== userId){
             return {
                 status: ResultStatus.Forbidden,
                 data: null
             }
         }
-       }else{
+       } 
+       if (isComment === false){
         return {
             status: ResultStatus.NotFound,
             
@@ -100,7 +101,7 @@ export const commentService = {
 
     async getCommentById(id: ObjectId ) {
         const findComment = await commentRepository.findComment(id)
-        if (findComment) {
+        if (findComment !== null) {
             return findComment
         } else {
             return false

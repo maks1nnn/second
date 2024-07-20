@@ -1,4 +1,8 @@
 import { randomUUID } from "crypto";
+import  {add}  from 'date-fns/add';
+import { userCollection } from "../../../src/db/mongo-db";
+import {UserDBType}  from '../../../src/db/user-db-types'
+ 
 
 
 type RegisterUserType = {
@@ -19,15 +23,15 @@ export const testSeeder = {
             pass: '123456789'
         }
     },
-    createUserDtos(count: number){
-        const users = [];
+    createUserDtos(count: number): RegisterUserType[] {
+        const users: RegisterUserType[] = [];
 
-        for(let i = 0; i <= count; i++){
+        for (let i = 0; i < count; i++) {
             users.push({
-                login: 'test' + i,
-                email: `test$(i)@gmail.com`,
-                pass: '12345678'
-            })
+                login: `test${i}`,
+                pass: '12345678',
+                email: `test${i}@gmail.com`,
+            });
         }
         return users;
     },
@@ -41,15 +45,15 @@ async registerUser(
         expirationDate,
         isConfirmed,
     }: RegisterUserType
-): Promise<IUUserService> {
-    const newUser : IUserDb = {
+)  {
+    const newUser  = {
         login,
         email,
         passwordHash: pass,
         createdAt: new Date(),
         emailConfirmation: {
             confirmationCode: code?? randomUUID(),
-            expirationDate: expirationDate ?? addEventListener(new Date(), {
+            expirationDate: expirationDate ?? add(new Date(), {
                 minutes: 30,
             }),
             isConfirmed: isConfirmed ?? false

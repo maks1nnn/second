@@ -39,7 +39,7 @@ export const userRepository = {
         if (checkUser) {
             return checkUser
         }
-        return false;
+        else { return false }
     },
 
 
@@ -81,9 +81,16 @@ export const userRepository = {
         return result.modifiedCount === 1
     },
 
-    async findByEmailOrLogin(body: any) {
-        const user = await userCollection.findOne({or: [{login : body}, {email: body}]})
-        return user
+    async findByEmailOrLogin(loginOrEmail: string) {
+         
+        const user = await userCollection.findOne({
+            $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
+        });
+        if (user) {
+            return user
+        } else {
+            return null
+        }
     },
 
 
