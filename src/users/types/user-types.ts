@@ -14,3 +14,7 @@ export type InputUserType = {
     password: string,
     email: string,
 }
+
+export type IdType = {
+    id: string
+}

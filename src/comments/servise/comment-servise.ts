@@ -1,8 +1,8 @@
-import { commentRepository } from "../repositories/commentMongoRepositories"
+import { commentRepository } from "../../repositories/commentMongoRepositories"
 import { ObjectId } from 'mongodb'
-import { userRepository } from "../repositories/userMongoRepository"
-import { InputCommentType, Result } from "../comments/types/comment-types"
-import { ResultStatus } from "../input-uotput-types/resultCode"
+import { userRepository } from "../../repositories/userMongoRepository"
+import { InputCommentType, Result } from "../types/comment-types"
+import { ResultStatus } from "../../input-uotput-types/resultCode"
 
 
 export const commentService = {

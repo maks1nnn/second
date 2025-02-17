@@ -1,9 +1,9 @@
 import {query, Request, Response} from 'express'
 import { ObjectId } from 'mongodb'
-import { commentService } from '../domain/comment-servise'
-import { InputCommentType, OutputCommentType } from '../comments/types/comment-types'
-import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
-import { ResultStatus } from '../input-uotput-types/resultCode'
+import { commentService } from '../servise/comment-servise'
+import { InputCommentType, OutputCommentType } from '../types/comment-types'
+import { OutputErrorsType } from '../../input-uotput-types/output-errors-types'
+import { ResultStatus } from '../../input-uotput-types/resultCode'
 
 
 export const commentControllers = {

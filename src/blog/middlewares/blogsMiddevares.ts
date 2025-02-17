@@ -1,5 +1,5 @@
 import { body } from "express-validator"
-import { BlogValidatorRules } from '../input-uotput-types/blog-types'
+import { BlogValidatorRules } from '../types/blog-types'
 
 export const blogValidationMiddlewares =[
  body('name')

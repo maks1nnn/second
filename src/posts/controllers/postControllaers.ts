@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
-import { postServise } from '../domain/post-servise' 
-import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
-import { OutputPostDBType, InputPostType } from '../input-uotput-types/post-types'
+import { postServise } from '../service/post-servise' 
+import { OutputErrorsType } from '../../input-uotput-types/output-errors-types'
+import { OutputPostDBType, InputPostType } from '../types/post-types'
 import { ObjectId } from 'mongodb'
-import { InputCommentType, OutputCommentType } from '../comments/types/comment-types'
-import { commentService } from '../domain/comment-servise'
-import { queryCommentRepository } from '../repositories/commentMongoQueryRepositories'
-import { ResultStatus } from '../input-uotput-types/resultCode'
+import { InputCommentType, OutputCommentType } from '../../comments/types/comment-types'
+import { commentService } from '../../comments/servise/comment-servise'
+import { queryCommentRepository } from '../../repositories/commentMongoQueryRepositories'
+import { ResultStatus } from '../../input-uotput-types/resultCode'
 
 
 

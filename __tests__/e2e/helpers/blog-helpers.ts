@@ -1,13 +1,13 @@
 import { OutputBlogType } from "../../../src/input-uotput-types/blog-types"
 import { req } from "../../helpers/req"
 import { SETTINGS } from "../../../src/settings"
-import {base64Adapter} from ;
+import {base64Adapter} from '../../../src/common/adapters/base64.adapter' ;
 
 
 export const createBlog = async (count: number = 2 ): Promise<OutputBlogType> => {
     const res = await req
         .post(SETTINGS.PATH.BLOGS)
-        .set('authorization', `Basic_${base64Adapter.encodeToBase64(SETTINGS.ADMIN_AUTH)}`)
+        .set('authorization', `Basic_${base64Adapter.encodeToBase64(SETTINGS.ADMIN_AUTH.admin)}`)
         .send( {
             name: 'name',
             description: 'description',
@@ -24,7 +24,7 @@ export const createBlog = async (count: number = 2 ): Promise<OutputBlogType> =>
         for (let i = 1; i <= count; i++){
             const res = await req
                 .post(SETTINGS.PATH.BLOGS)
-                .set()
+                //.set()
                 .send( {
                     name: `name${i}`,
                     description: `description${i},`,

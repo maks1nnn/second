@@ -1,11 +1,11 @@
 import {Router} from 'express'
-import { blogControllers } from '../conttrollers/blogControllers'
-import { authMiddleware } from '../middlewares/authMiddlewares'
-import { blogValidationMiddlewares,  } from '../middlewares/blogsMiddevares'
+import { blogControllers } from '../blog/controllers/blogControllers'
+import { authMiddleware } from '../auth/middlewares/authMiddlewares'
+import { blogValidationMiddlewares,  } from '../blog/middlewares/blogsMiddevares'
 import { inputCheckParamsErrorsMiddleware } from '../middlewares/checkParamsReult'
 import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResultMiddlewares'
-import { paramsBlogValidate } from '../middlewares/paramsBlogMiddlewares'
-import { postWithBlogValidationMiddlewares } from '../middlewares/postWithBlogIdMiddleware'
+import { paramsBlogValidate } from '../blog/middlewares/paramsBlogMiddlewares'
+import { postWithBlogValidationMiddlewares } from '../posts/middlewars/postWithBlogIdMiddleware'
 
 
 

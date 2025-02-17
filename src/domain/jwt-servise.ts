@@ -14,6 +14,17 @@ export const jwtServise = {
         );
     },
 
+    async createRefreshToken(userId: string): Promise<string> {
+        return jwt.sign(
+            {
+                userId: userId,
+            }, SETTINGS.REF_SECRET,
+            {
+                expiresIn: SETTINGS.REF_TIME,
+            }
+        );
+    },
+
     async decodeToken (token: string): Promise<any> {
         try {
             return jwt.decode(token);

@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb"
 import { userCollection } from "../db/mongo-db"
 import { UserDBType } from "../db/user-db-types";
-import { UserValidationRules } from "../input-uotput-types/user-types";
+import { UserValidationRules } from "../users/types/user-types";
 
 
 
@@ -21,7 +21,7 @@ export const userRepository = {
 
     async findUser(id: ObjectId) {
         const user = await userCollection.findOne({ _id: id })
-        if (user) {
+        if (user  ) {
             return user
 
 

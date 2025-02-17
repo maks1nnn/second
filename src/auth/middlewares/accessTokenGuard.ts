@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express"
-import { authServise } from "../auth/servise/auth-servise";
-import { ResultStatus } from "../input-uotput-types/resultCode";
+import { authServise } from "../servise/auth-servise";
+import { ResultStatus } from "../../input-uotput-types/resultCode";
+import { IdType } from "../../users/types/user-types";
 
 
 
@@ -11,8 +12,8 @@ export const accessTokenGuard = async ( req: Request,
        
     const result = await authServise.checkAccessToken(req.headers.authorization)
         
-    if(result.status === ResultStatus.Success) {
-        req.user = result.data as IdType
+    if(result.status === ResultStatus.Success && result.data !== null) {
+        req.userId =  result.data.id as string
         return next()
     }
 

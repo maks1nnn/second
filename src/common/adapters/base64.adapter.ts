@@ -6,3 +6,5 @@ export const base64Adapter = {
         return Buffer.from(data, 'base64')
     }
 }
+
+//адаптер

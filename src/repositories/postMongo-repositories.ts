@@ -1,6 +1,6 @@
 import { postCollection } from '../db/mongo-db'
 import { blogCollection } from '../db/mongo-db'
-import { InputPostType, OutputPostDBType } from '../input-uotput-types/post-types'
+import { InputPostType, OutputPostDBType } from '../posts/types/post-types'
 import { PostDBType } from '../db/post-db-type'
 //import {blogRepository} from '../repositories/blogs-repositories'
 import { ObjectId } from 'mongodb'

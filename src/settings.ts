@@ -26,7 +26,9 @@ export const SETTINGS ={
     AUTH_COLLECTION_NAME :process.env.AUTH_COLLECTION_NAME || "",
     COMMENT_COLLECTION_NAME : process.env.COMMENT_COLLECTION_NAME || "",
     AC_SECRET :  "123",
-    AC_TIME:  "1h" ,
+    AC_TIME:  "10s" ,
+    REF_SECRET :  "456",
+    REF_TIME:  "20s" ,
     EMAIL: 'petrovskijmaksim345@gmail.com',
     EMAIL_PASS: "pavvumxpuqcdgsqg" ,
 }

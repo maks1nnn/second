@@ -1,11 +1,11 @@
-import { postRepository } from '../repositories/postMongo-repositories'
-import { blogRepository } from '../repositories/blogMongo-repositories'
-import { InputPostInBlogType, InputPostType, OutputPostDBType } from '../input-uotput-types/post-types'
-import { PostDBType } from '../db/post-db-type'
+import { postRepository } from '../../repositories/postMongo-repositories'
+import { blogRepository } from '../../repositories/blogMongo-repositories'
+import { InputPostInBlogType, InputPostType, OutputPostDBType } from '../types/post-types'
+import { PostDBType } from '../../db/post-db-type'
 //import {blogRepository} from '../repositories/blogs-repositories'
 import { ObjectId } from 'mongodb'
-import { BlogDBType } from '../db/blog-db-type'
-import { queryPostRepository } from '../repositories/postMongoQueryRepository'
+import { BlogDBType } from '../../db/blog-db-type'
+import { queryPostRepository } from '../../repositories/postMongoQueryRepository'
 
 export const postServise = {
     async createPosts(body: InputPostType) {

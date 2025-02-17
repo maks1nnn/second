@@ -1,10 +1,10 @@
 import {Router} from 'express'
-import { postControllers } from '../conttrollers/postControllaers'
-import { postValidationMiddlewares } from '../middlewares/postsMiddlewares'
+import { postControllers } from '../posts/controllers/postControllaers'
+import { postValidationMiddlewares } from '../posts/middlewars/postsMiddlewares'
 import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResultMiddlewares'
-import { authMiddleware } from '../middlewares/authMiddlewares'
-import { authJWTMiddleware } from '../middlewares/authJWTMiddleware'
-import { commentValidatorMiddlewares } from '../middlewares/commentvalidateMiddleware'
+import { authMiddleware } from '../auth/middlewares/authMiddlewares'
+import { authJWTMiddleware } from '../auth/middlewares/authJWTMiddleware'
+import { commentValidatorMiddlewares } from '../comments/middlewars/commentvalidateMiddleware'
 
 export const postsRouter = Router()
 

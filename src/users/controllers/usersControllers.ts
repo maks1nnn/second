@@ -1,7 +1,7 @@
 import{Request, Response} from 'express'
 import { ObjectId } from 'mongodb'
-import { userServise } from '../domain/user-servise'
-import { queryUserRepository } from '../repositories/userMongoQueryRepository'
+import { userServise } from '../service/user-servise'
+import { queryUserRepository } from '../../repositories/userMongoQueryRepository'
 
 
 export const usersControllers = {

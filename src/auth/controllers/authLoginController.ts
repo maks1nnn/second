@@ -24,8 +24,17 @@ export const loginController = async (req: Request,res:Response) => {
               return
              
         }
-        if(result.status === ResultStatus.Success){ res.status(200).send({
-            accessToken: result.data!
+        if(result.status === ResultStatus.Success){
+            const { token, refreshToken } = result.data!;
+            
+            res
+            .cookie('refreshToken', refreshToken, {
+                httpOnly: true, // Защищает от XSS атак
+                secure:  true,                
+            })
+            .status(200)
+            .send({
+            accessToken: token
         })}
     } catch (err) {
         console.error(err)

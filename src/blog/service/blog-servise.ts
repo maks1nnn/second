@@ -1,8 +1,8 @@
-import { blogRepository } from '../repositories/blogMongo-repositories' 
-import { InputBlogType } from '../input-uotput-types/blog-types'
-import { BlogDBType } from '../db/blog-db-type'
+import { blogRepository } from '../../repositories/blogMongo-repositories' 
+import { InputBlogType } from '../types/blog-types'
+import { BlogDBType } from '../../db/blog-db-type'
 import { ObjectId } from 'mongodb'
-import { queryBlogRepository } from '../repositories/blogMongoQueryRepository'
+import { queryBlogRepository } from '../../repositories/blogMongoQueryRepository'
 
 export const blogServise = {
     async createBlogs(body: InputBlogType) {

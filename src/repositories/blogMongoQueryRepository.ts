@@ -4,6 +4,8 @@ import { BlogDBType } from "../db/blog-db-type"
 
 export const queryBlogRepository = {
 
+     
+
     helper(query: any) {
         return {
             pageNumber: query.pageNumber ? +query.pageNumber : 1,
@@ -20,7 +22,7 @@ export const queryBlogRepository = {
         const search = query.searchNameTerm !== null ? { name: { $regex: query.searchNameTerm, $options: 'i' } } : {}
 
         try {
-            const blogs = await blogCollection
+            const blogs = await  blogCollection
                 .find({
                     //    ...byId,
                     ...search,
@@ -30,7 +32,7 @@ export const queryBlogRepository = {
                 .limit(query.pageSize)
                 .toArray()
 
-            const c = await blogCollection.countDocuments({
+            const c = await  blogCollection.countDocuments({
                 //   ...byId,
                 ...search,
             })
@@ -58,12 +60,12 @@ export const queryBlogRepository = {
     },
 
     async findByBlogId (badquery:any, blogId: string) {
-        const query = this.helper(badquery)
+        const query =  this.helper(badquery)
         const byId = {blogId: blogId}
         const search = query.searchNameTerm !== null ? { name: { $regex: query.searchNameTerm, $options: 'i' } } : {}
 
         try {
-            const posts = await postCollection
+            const posts = await  postCollection
                 .find({
                     ...byId,
                     ...search,
@@ -73,7 +75,7 @@ export const queryBlogRepository = {
                 .limit(query.pageSize)
                 .toArray()
 
-            const c = await postCollection.countDocuments({
+            const c = await  postCollection.countDocuments({
                 ...byId,
                 ...search,
             })

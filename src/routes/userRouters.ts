@@ -1,8 +1,8 @@
 import {Router} from 'express'
-import { usersControllers } from '../conttrollers/usersControllers'
-import { authMiddleware } from '../middlewares/authMiddlewares'
+import { usersControllers } from '../users/controllers/usersControllers'
+import { authMiddleware } from '../auth/middlewares/authMiddlewares'
 import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResultMiddlewares'
-import { userValidationMiddlevare } from '../middlewares/usersMiddleware'
+import { userValidationMiddlevare } from '../users/middlewars/usersMiddleware'
 
 
 

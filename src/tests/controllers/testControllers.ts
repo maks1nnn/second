@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { testRepository } from '../repositories/test-repositories'
+import { testRepository } from '../../repositories/test-repositories'
 
 
 

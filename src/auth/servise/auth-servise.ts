@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import { add } from "date-fns";
 import { UserDBType } from "../../db/user-db-types";
-import { InputUserType, UserValidationRules } from "../../input-uotput-types/user-types";
+import { InputUserType, IdType, UserValidationRules } from "../../users/types/user-types";
 import { userRepository } from "../../repositories/userMongoRepository";
 import { bcryptServise } from "../../domain/hashServise";
 import { nodemailerService } from "../../common/adapters/nodemailer-adapter"; 
@@ -9,9 +9,9 @@ import { Result } from "../../comments/types/comment-types";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { InputAuthType } from "../types/auth-types";
 import { jwtServise } from "../../domain/jwt-servise";
-import { registrationEmailTemplate } from "../../common/email-temp;ates/registrationEmailTemplate";
+import { registrationEmailTemplate } from "../../common/email-templates/registrationEmailTemplate";
 import { InferIdType, ObjectId } from "mongodb";
-
+import { Request, Response } from "express"
 
 
 
@@ -36,7 +36,7 @@ export const authServise = {
         }
         const passwordHash = await bcryptServise.generateHash(input.password)
 
-        const newUser: UserDBType = {
+        const newUser  = {
             login: input.login,
             email: input.email,
             passwordHash,
@@ -198,85 +198,52 @@ export const authServise = {
         const jwtPayload =  user._id.toString()
         
         const token: string = await jwtServise.createToken(jwtPayload)
+        const refreshToken:string = await jwtServise.createRefreshToken(jwtPayload)
+        
+         
+
 
         return {
             status: ResultStatus.Success,
-            data: token
+            data: {token,refreshToken}
         }
     },
-    async checkAccessToken (authHeader: string): Promise<Result<IdType| null>> {
-        const schema = authHeader.split(" ")[0]
-        if(schema !== "Bearer"){
-            return { 
+    async checkAccessToken(authHeader: string): Promise<Result<IdType  | null>> {
+        const [schema, token] = authHeader.split(" ");
+    
+        if (schema !== "Bearer") {
+            return {
                 status: ResultStatus.Unauthorized,
-                errorMessage: "wrong auth",
-                data: null, 
-
-            }
+                errorMessage: "Wrong auth",
+                data: null,
+            };
         }
-        const token = authHeader.split(" ")[1]
-        const payload = await jwtServise.verifyToken(token)
+    
+        const payload = await jwtServise.verifyToken(token);
+    
         if (payload) {
-            const {userId} = payload;
-
-            const user = await userRepository.findUser(new ObjectId(userId))
-
-            if(!user){
+            const { userId } = payload;
+    
+            const user = await userRepository.findUser(new ObjectId(userId));
+    
+            if (!user) {
                 return {
                     status: ResultStatus.Unauthorized,
-                    errorMessage: "user not found",
-                    data:null
-                }
-
-                 return {
-                    status: ResultStatus.Success,
-                    data: {id:userId}
-                 }
+                    errorMessage: "User not found",
+                    data: null,
+                };
             }
-            
+    
+            return {
+                status: ResultStatus.Success,
+                data: {id: userId} as IdType, // Assuming userId is a string
+            };
         }
+    
         return {
-            status : ResultStatus.Unauthorized,
-            errorMessage: "wrong auth",
-            data:null,
-        }
+            status: ResultStatus.Unauthorized,
+            errorMessage: "Wrong auth",
+            data: null,
+        };
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-

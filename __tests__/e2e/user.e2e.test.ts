@@ -7,10 +7,11 @@ import { SETTINGS } from "../../src/settings";
 
 
 describe('USER_TESTS', () =>{
-    const initApp = app
+    
 
     beforeAll( async () => {
         const mongoServer = await MongoMemoryServer.create()
+        await db.run(mongoServer.getUri())
         
         
     })

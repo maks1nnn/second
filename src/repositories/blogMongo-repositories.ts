@@ -1,14 +1,17 @@
-import { blogCollection } from '../db/mongo-db'
-import { InputBlogType } from '../input-uotput-types/blog-types'
+import { blogCollection } from '../db/mongo-db';
+import { InputBlogType } from '../blog/types/blog-types'
 import { BlogDBType } from '../db/blog-db-type'
 import { ObjectId } from 'mongodb'
 
 export const blogRepository = {
+
+     
+
     async createBlogs(inputData: InputBlogType) {
         
         try {
 
-            const insertInfo = await blogCollection.insertOne(inputData)  //!!!!!!!!!
+            const insertInfo = await  blogCollection.insertOne(inputData)  //!!!!!!!!!
 
             console.log(insertInfo)
 
@@ -21,10 +24,10 @@ export const blogRepository = {
     },
 
     async findBlogs(id: ObjectId) {
-        const blog = await blogCollection.findOne({ _id: id })
+        const blog = await  blogCollection.findOne({ _id: id })
         //console.log(blog)
         if (blog) {
-            return blog
+            return blog                         
         } else { return null }
     },
     async findForOutput(id: ObjectId) {
@@ -48,7 +51,7 @@ export const blogRepository = {
     },
 
     async getAllBlogs() {
-        const blogs = await blogCollection.find({}).toArray();
+        const blogs = await  blogCollection.find({}).toArray();
         return blogs.map(blog => ({
             id: blog._id.toString(), // Преобразование ObjectId в строку для использования в тесте
             name: blog.name,
@@ -60,7 +63,7 @@ export const blogRepository = {
     },
 
     async updateBlogs(id: ObjectId, body: InputBlogType) {
-        const result = await blogCollection.updateOne({ _id: id }, {
+        const result = await  blogCollection.updateOne({ _id: id }, {
             $set: {
                 description: body.description,
                 name: body.name,
@@ -72,7 +75,7 @@ export const blogRepository = {
 
     async deleteBlogs(id: ObjectId) {
 
-        const result = await blogCollection.deleteOne({ _id: id })
+        const result = await  blogCollection.deleteOne({ _id: id })
         return result.deletedCount === 1
     },
 }

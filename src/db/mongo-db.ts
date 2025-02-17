@@ -3,11 +3,15 @@ import { Collection, Db, MongoClient, ObjectId, ServerApiVersion } from "mongodb
 import { PostDBType } from "./post-db-type";
 import { BlogDBType } from "./blog-db-type";
 
-export const db = {
+/*export const db = {
     client: {} as MongoClient,
     getDBName(): Db {
-        return this.client.db(SETTINGS.DB_NAME)
+        if (!this.client) {
+            throw new Error('MongoClient не инициализирован. Проверьте вызов метода run.');
+        }
+        return this.client.db(SETTINGS.DB_NAME);
     },
+   
     async run(url: string): Promise<boolean> {
         try {
             this.client = new MongoClient(url, {
@@ -59,7 +63,11 @@ export const db = {
 
 }
 
-/*const client: MongoClient = new MongoClient(SETTINGS.MONGO_URL)
+ */
+
+console.log(SETTINGS.MONGO_URL)
+
+const client: MongoClient = new MongoClient(SETTINGS.MONGO_URL)
 
 export const db : Db = client.db(SETTINGS.DB_NAME);
 
@@ -79,4 +87,4 @@ export const connectionToDB = async () => {
         await client.close()
         return false
     }
-}*/
+}

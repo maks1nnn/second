@@ -29,5 +29,5 @@
     status: ResultStatus;
     errorMessage?: string;
     extensions?: [{field: string, message: string}],
-    data: T
+    data: any
   }

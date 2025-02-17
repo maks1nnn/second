@@ -1,11 +1,11 @@
 import { query, Request, Response } from 'express'
-import { blogServise } from '../domain/blog-servise'
-import { OutputErrorsType } from '../input-uotput-types/output-errors-types'
-import { OutputBlogType, InputBlogType } from '../input-uotput-types/blog-types'
+import { blogServise } from '../service/blog-servise'
+import { OutputErrorsType } from '../../input-uotput-types/output-errors-types'
+import { OutputBlogType, InputBlogType } from '../types/blog-types'
 import { ObjectId } from 'mongodb'
-import { queryBlogRepository } from '../repositories/blogMongoQueryRepository'
-import { InputPostInBlogType, OutputPostDBType, OutputPostPaginType } from '../input-uotput-types/post-types'
-import { postServise } from '../domain/post-servise'
+import { queryBlogRepository } from '../../repositories/blogMongoQueryRepository'
+import { InputPostInBlogType, OutputPostDBType, OutputPostPaginType } from '../../posts/types/post-types'
+import { postServise } from '../../posts/service/post-servise'
 
 
 

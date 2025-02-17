@@ -1,5 +1,5 @@
 import { body } from "express-validator"
-import { UserValidationRules } from "../input-uotput-types/user-types"
+import { UserValidationRules } from "../types/user-types"
 
 export const userValidationMiddlevare = [
     body('login')

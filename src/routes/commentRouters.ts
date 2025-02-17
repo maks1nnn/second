@@ -1,7 +1,7 @@
 import {Router} from 'express'
-import { commentControllers } from '../conttrollers/commentControllers'
-import { authJWTMiddleware } from '../middlewares/authJWTMiddleware'
-import { commentValidatorMiddlewares } from '../middlewares/commentvalidateMiddleware'
+import { commentControllers } from '../comments/controllers/commentControllers'
+import { authJWTMiddleware } from '../auth/middlewares/authJWTMiddleware'
+import { commentValidatorMiddlewares } from '../comments/middlewars/commentvalidateMiddleware'
 import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResultMiddlewares'
 
 

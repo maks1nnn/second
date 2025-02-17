@@ -8,14 +8,14 @@ const start = async () => {
 
     addRoutes(app)
 
-   if(!await connectionToDB()){
+    if(!await connectionToDB()){
         console.log('ahtyng')
         process.exit()
     }
 
 app.listen(SETTINGS.PORT, async () => {
-    console.log('...server started')
+    console.log(' ...server started')
 })
 }
 
-start()
+start();

@@ -1,9 +1,9 @@
 import { randomUUID } from "crypto";
 import  {add}  from 'date-fns/add';
-import { userCollection } from "../../../src/db/mongo-db";
+import { db} from "../../../src/db/mongo-db";
 import {UserDBType}  from '../../../src/db/user-db-types'
  
-
+ 
 
 type RegisterUserType = {
     login: string,
@@ -16,11 +16,14 @@ type RegisterUserType = {
 }
 
 export const testSeeder = {
+    get userCollection(){
+        return db.getCollections().userCollection;
+    },
     createUserDto() {
         return {
             login: 'test',
             email: 'test@gmail.com',
-            pass: '123456789'
+            password: '123456789'
         }
     },
     createUserDtos(count: number): RegisterUserType[] {
@@ -59,7 +62,7 @@ async registerUser(
             isConfirmed: isConfirmed ?? false
         }
     };
-    const res = await userCollection.insertOne({...newUser})
+    const res = await this.userCollection.insertOne({...newUser})
     return {
         id: res.insertedId.toString(),
         ...newUser

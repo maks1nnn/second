@@ -1,7 +1,7 @@
 import {body, param} from "express-validator"
 import { ObjectId } from "mongodb"
-import {PostValidatorRules} from '../input-uotput-types/post-types'
-import {blogRepository} from '../repositories/blogMongo-repositories'
+import {PostValidatorRules} from '../../posts/types/post-types'
+import {blogRepository} from '../../repositories/blogMongo-repositories'
 
 
 export const paramsBlogValidate = [
