@@ -20,4 +20,4 @@ authRouter.post('/registration',...userValidationMiddlevare, inputCheckErrorsMid
 authRouter.post('/registration-email-resending', registrationEmailResendingController)
 authRouter.post('/refresh-token', refreshTokenController)
 authRouter.post('/logout', logoutController)
-                
+ 

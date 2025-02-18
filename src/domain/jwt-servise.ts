@@ -43,6 +43,16 @@ export const jwtServise = {
             console.error("Token verify some error");
             return null;
         }
+    },
+    async verifyRefreshToken(token:string) : Promise<any> {
+        try{
+           const result:any = jwt.verify(token, SETTINGS.REF_SECRET);
+           console.log(result) 
+           return result.userId
+        }catch(error) {
+            console.error("Token verify some error");
+            return null;
+        }
     }
 }
 

@@ -18,9 +18,9 @@ export const authJWTMiddleware = async (req: Request, res: Response, next: NextF
     }
 
     const token = req.headers.authorization.split(' ')[1]
-    console.log(token)
+     
     const userId = await jwtServise.verifyToken(token)
-    console.log(userId)
+    
 
     if (userId !== null) {
         const user = await userServise.findById(new ObjectId(userId))
