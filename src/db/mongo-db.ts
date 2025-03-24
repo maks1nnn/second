@@ -76,6 +76,7 @@ export const blogCollection  = db.collection (SETTINGS.BLOG_COLLECTION_NAME)
 export const userCollection   = db.collection (SETTINGS.USER_COLLECTION_NAME)
 export const authCollection = db.collection(SETTINGS.AUTH_COLLECTION_NAME)
 export const commentCollection = db.collection(SETTINGS.COMMENT_COLLECTION_NAME)
+export const jwtCollection = db.collection(SETTINGS.JWT_COLLECTION_NAME)
 
 export const connectionToDB = async () => {
     try {
