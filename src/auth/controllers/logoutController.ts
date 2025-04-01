@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
 import { jwtServise } from "../../domain/jwt-servise"
 import jwt from "jsonwebtoken";
-
+import { jwtRepository } from "../../repositories/jwt-repositories";
+import { ResultStatus } from "../../input-uotput-types/resultCode";
 
 export const logoutController = async (req: Request, res: Response) => {
     try {
@@ -30,8 +31,21 @@ export const logoutController = async (req: Request, res: Response) => {
             throw err
         }
 
+        const payload = await jwtServise.verifyRefreshToken(refreshToken)      
         
+            const safeToken = await jwtRepository.findRefreshToken(payload)
+            
+            if(safeToken  === null){
+                return res.status(401).json({message: 'token is bad'})
+                
+            }
+
+           if(refreshToken !== safeToken ){
+                return res.status(401).json({message: 'token is bad'})
+                 
+            }
         
+            const delToken = await jwtRepository.logoutAllDevices(payload)
         
         
         /*const payload = await jwtServise.verifyToken(refreshToken)
