@@ -13,7 +13,8 @@ export const SETTINGS ={
         TEST: '/testing',
         USERS: '/users',
         AUTH: '/auth',
-        COMMENT: '/comments'
+        COMMENT: '/comments',
+        SECURITY: '/security'
     },
     ADMIN_AUTH: {
         admin:'qwerty'

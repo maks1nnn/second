@@ -6,6 +6,7 @@ import { authRouter } from './authRouters'
 import { usersRouter } from './userRouters'
 import { commentRouter } from './commentRouters'
 import { Express } from 'express-serve-static-core'
+import { securityRouter } from './securityRouters'
 
 export const addRoutes = (app:Express) => {
     app.use(SETTINGS.PATH.BLOGS, blogsRouter)
@@ -14,4 +15,5 @@ export const addRoutes = (app:Express) => {
     app.use(SETTINGS.PATH.USERS, usersRouter)
     app.use(SETTINGS.PATH.AUTH, authRouter)
     app.use(SETTINGS.PATH.COMMENT, commentRouter)
+    app.use(SETTINGS.PATH.SECURITY, securityRouter)
 }
