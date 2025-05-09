@@ -12,10 +12,10 @@ import { jwtServise } from "../../domain/jwt-servise";
 import { registrationEmailTemplate } from "../../common/email-templates/registrationEmailTemplate";
 import { InferIdType, ObjectId } from "mongodb";
 import { Request, Response } from "express"
-import  jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { jwtRepository } from "../../repositories/jwt-repositories";
 import { Console } from "console";
- 
+
 
 
 export const authServise = {
@@ -189,33 +189,26 @@ export const authServise = {
             }
         }
 
-        /* if (user.emailConfirmation.isConfirmed === false) {
-             return {
-                 status: ResultStatus.Forbidden,
-                 extensions:[{field: "code", message:'Failed to send confirmation email'}],
-                 data: null
-             }
-         }*/
-         console.log(user)
+
+        console.log(user)
 
         const jwtPayload = user._id.toString()
-console.log(jwtPayload)
+
         const token: string = await jwtServise.createToken(jwtPayload)
         const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
-        
+
         const inputData = {
-           id: jwtPayload, 
-           token: refreshToken} ;
-        const isJwt = await jwtRepository.saveRefreshToken(jwtPayload ,refreshToken)
-
-        console.log('00000' + refreshToken)
-
+            id: jwtPayload,
+            token: refreshToken
+        };
+        const isJwt = await jwtRepository.saveRefreshToken(jwtPayload, refreshToken)
 
         return {
             status: ResultStatus.Success,
             data: { token, refreshToken }
         }
     },
+
     async checkAccessToken(authHeader: string): Promise<Result<IdType | null>> {
         const [schema, token] = authHeader.split(" ");
 
@@ -230,7 +223,7 @@ console.log(jwtPayload)
         const payload = await jwtServise.verifyToken(token);
 
         if (payload) {
-            const   userId  = payload;
+            const userId = payload;
 
             const user = await userRepository.findUser(new ObjectId(userId));
 
@@ -255,43 +248,43 @@ console.log(jwtPayload)
         };
     },
     async checkAndUpdateRefToken(refToken: string): Promise<Result<string | null>> {
-       
-        try{
-         
+
+        try {
+
             const payload = await jwtServise.verifyRefreshToken(refToken);
-        if (!payload  ) {
-            return {
-                status: ResultStatus.Unauthorized,
-                errorMessage: "Invalid token payload",
-                data: null
-            };
-        }
-            
-                  
-        
+            if (!payload) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    errorMessage: "Invalid token payload",
+                    data: null
+                };
+            }
+
+
+
             const safeToken = await jwtRepository.findRefreshToken(payload)
 
-           if(safeToken  === null){
+            if (safeToken === null) {
                 return {
                     status: ResultStatus.Unauthorized,
                     errorMessage: 'bad old token',
-                    data:null
+                    data: null
                 }
             }
             console.log('!!!! ', refToken)
-            console.log('2222 ', safeToken )
-             if(refToken !== safeToken ){
+            console.log('2222 ', safeToken)
+            if (refToken !== safeToken) {
                 return {
                     status: ResultStatus.Unauthorized,
                     errorMessage: "token   invalid",
                     data: null,
                 }
-            } 
+            }
 
 
             console.log('hanting ', payload)
-         
-            const  userId  = payload;
+
+            const userId = payload;
             console.log(userId + 'Failed')
             const user = await userRepository.findUser(new ObjectId(userId));
 
@@ -306,25 +299,25 @@ console.log(jwtPayload)
             const token: string = await jwtServise.createToken(userId)
             const refreshToken: string = await jwtServise.createRefreshToken(userId)
 
-             
-            const remove = await jwtRepository.saveRefreshToken(payload, refreshToken )
+
+            const remove = await jwtRepository.saveRefreshToken(payload, refreshToken)
 
 
 
             return {
                 status: ResultStatus.Success,
                 data: { token, refreshToken }
-            
 
 
-        }
-         }catch (err){
+
+            }
+        } catch (err) {
             console.error("FIRST" + err)
             return {
                 status: ResultStatus.Unauthorized,
                 errorMessage: "1token not good",
                 data: null,
             }
-         }
+        }
     },
 }

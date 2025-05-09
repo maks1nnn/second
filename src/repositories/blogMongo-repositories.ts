@@ -10,11 +10,7 @@ export const blogRepository = {
     async createBlogs(inputData: InputBlogType) {
         
         try {
-
-            const insertInfo = await  blogCollection.insertOne(inputData)  //!!!!!!!!!
-
-            console.log(insertInfo)
-
+            const insertInfo = await  blogCollection.insertOne(inputData)  
             return insertInfo.insertedId
         }
         catch (e) {
@@ -25,7 +21,6 @@ export const blogRepository = {
 
     async findBlogs(id: ObjectId) {
         const blog = await  blogCollection.findOne({ _id: id })
-        //console.log(blog)
         if (blog) {
             return blog                         
         } else { return null }
@@ -39,14 +34,12 @@ export const blogRepository = {
 
     mapToOutput(blog: BlogDBType) {
         return {
-
             id: blog._id.toString(),
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl,
             isMembership: blog.isMembership,
             createdAt: blog.createdAt,
-
         }
     },
 
@@ -74,7 +67,6 @@ export const blogRepository = {
     },
 
     async deleteBlogs(id: ObjectId) {
-
         const result = await  blogCollection.deleteOne({ _id: id })
         return result.deletedCount === 1
     },
