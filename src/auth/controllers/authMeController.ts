@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import { ObjectId } from "mongodb"
 import { userServise } from "../../users/service/user-servise"
 import { ResultStatus } from "../../input-uotput-types/resultCode"
-import { authServise } from "../servise/auth-servise"
+import { authServise } from "../servise/authRegister-servise"
  
  
 

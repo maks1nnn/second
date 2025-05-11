@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { ObjectId } from "mongodb"
-import { authServise } from "../servise/auth-servise"
+import { authServise } from "../servise/authRegister-servise"
 import { jwtServise } from "../../domain/jwt-servise"
 import { queryUserRepository } from "../../repositories/userMongoQueryRepository"
 import { ResultStatus } from "../../input-uotput-types/resultCode"

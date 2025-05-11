@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express"
-import { authServise } from "../servise/auth-servise";
+import { authServise } from "../servise/authRegister-servise";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { IdType } from "../../users/types/user-types";
 

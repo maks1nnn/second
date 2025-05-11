@@ -15,11 +15,11 @@ export type InputIpType = {
 }
 
 export type DeleteSessionByDeviceIdType = {
-    ip: string,
+    id: string,
     deviceId: string,
 }
 
 export type FindSessionByDevice = {
-    ip: string,
+    id: string,
     deviceId: string,
 }

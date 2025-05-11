@@ -1,13 +1,13 @@
 import { Request, Response } from "express"
 import { ObjectId } from "mongodb"
-import { authServise } from "../servise/auth-servise"
+import { loginServise } from "../servise/authLogin-servise"
 import { jwtServise } from "../../domain/jwt-servise"
 import { ResultStatus } from "../../input-uotput-types/resultCode"
 
 
 export const loginController = async (req: Request,res:Response) => {
     try{
-        const result = await authServise.loginUser(req.body)
+        const result = await loginServise.loginUser(req.body)
         if(result.status === ResultStatus.BadRequest){
             res.status(401).send({
                 errorsMessages: result.extensions 

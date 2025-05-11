@@ -1,7 +1,9 @@
 import { Result } from "express-validator";
 import { ObjectId } from "mongodb";
+import { ipControlCollection } from "../../db/mongo-db";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { ipControlRepository } from "../repository/ipRepository";
+import { DeleteSessionByDeviceIdType } from "../types/ipDbTypes";
 
 
 export const securityService = {
@@ -22,11 +24,34 @@ export const securityService = {
          }
     },
 
-    async deleteUserSession(){
+    async deleteUserSession(inputData: DeleteSessionByDeviceIdType){
+        const result = await ipControlRepository.deleteSessionByDeviceId(inputData)
+        if (result === null){
+            return{
+                status: ResultStatus.Unauthorized,
+                extensions: [{field:"code", message: 'not found device'}],
+                data: null,
+            }
+        }
 
+        return{
+            status: ResultStatus.Success,
+            data: result
+        }
     },
 
-    async deleteAllSessions(){
-        
+    async deleteAllSessions(userId:ObjectId){
+        const result = await ipControlRepository.deleteAllSesionsByUserId(userId)
+        if (result === null){
+            return{
+                status: ResultStatus.Unauthorized,
+                extensions: [{field:"code", message: 'not found device'}],
+                data: null,
+            }
+        }
+        return{
+            status: ResultStatus.Success,
+            data: result
+        }
     }
 }
