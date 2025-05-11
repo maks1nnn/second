@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getDeviceController } from "../security/controllers/getDreviseController";
-import { deleteAllDevicesController } from "../security/controllers/deleteDeviceController";
-import { deleteUserSessionController } from "../security/controllers/deleteDeviseController";
+import { deleteAllDevicesController } from "../security/controllers/deleteAllDeviceController";
+import { deleteUserSessionController } from "../security/controllers/deleteDeviceController";
 
 export const securityRouter = Router()
 
