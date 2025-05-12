@@ -5,10 +5,11 @@ import { DeleteSessionByDeviceIdType, FindSessionByDevice, InputIpType,  } from 
 
 
 export const ipControlRepository = {
+    
     async saveIp(inputData:InputIpType){
        try{ 
         const insertInfo = await ipControlCollection.insertOne(inputData)
-         
+          
        }catch(error){
         console.log(error)
        }

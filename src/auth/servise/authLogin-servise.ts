@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { add } from "date-fns";
-import { UserDBType } from "../../db/user-db-types";
+ 
 import { InputUserType, IdType, UserValidationRules } from "../../users/types/user-types";
 import { userRepository } from "../../repositories/userMongoRepository";
 import { bcryptServise } from "../../domain/hashServise";
@@ -15,155 +15,165 @@ import { Request, Response } from "express"
 import jwt from "jsonwebtoken";
 import { jwtRepository } from "../../repositories/jwt-repositories";
 import { Console } from "console";
+import { v4 as uuidv4 } from 'uuid';
+import { ipControlRepository } from "../../security/repository/ipRepository";
+import { decode } from "punycode";
 
 
 
 
 export const loginServise = {
 
-
-
-async loginUser(input: InputAuthType): Promise<Result<string | null>> {
-    const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
-    if (user !== null) { console.log("userLOGIN: " + user.login) }
-    if (user !== null) { console.log("userLOGIN: " + user.emailConfirmation.isConfirmed) }
-    if (user === null || !(await bcryptServise.checkPassword(input.password, user.passwordHash))) {
-        return {
-            status: ResultStatus.BadRequest,
-            extensions: [{ field: "code", message: 'Failed to send confirmation email pasword' }],
-            data: null
-        }
-    }
-
-
-    console.log(user)
-
-    const jwtPayload = user._id.toString()
-
-    const token: string = await jwtServise.createToken(jwtPayload)
-    const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
-
-    const inputData = {
-        id: jwtPayload,
-        token: refreshToken
-    };
-    const isJwt = await jwtRepository.saveRefreshToken(jwtPayload, refreshToken)
-
-    return {
-        status: ResultStatus.Success,
-        data: { token, refreshToken }
-    }
-},
-
-async checkAccessToken(authHeader: string): Promise<Result<IdType | null>> {
-    const [schema, token] = authHeader.split(" ");
-
-    if (schema !== "Bearer") {
-        return {
-            status: ResultStatus.Unauthorized,
-            errorMessage: "Wrong auth",
-            data: null,
-        };
-    }
-
-    const payload = await jwtServise.verifyToken(token);
-
-    if (payload) {
-        const userId = payload;
-
-        const user = await userRepository.findUser(new ObjectId(userId));
-
-        if (!user) {
+    async loginUser(input: InputAuthType,title: string, ip:string ): Promise<Result<string | null  >> {
+        try{
+        
+        const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
+        if (user !== null) { console.log("userLOGIN: " + user.login) }
+        if (user !== null) { console.log("userLOGIN: " + user.emailConfirmation.isConfirmed) }
+        if (user === null || !(await bcryptServise.checkPassword(input.password, user.passwordHash))) {
             return {
-                status: ResultStatus.Unauthorized,
-                errorMessage: "User not found",
-                data: null,
-            };
-        }
-
-        return {
-            status: ResultStatus.Success,
-            data: { id: userId } as IdType, // Assuming userId is a string
-        };
-    }
-
-    return {
-        status: ResultStatus.Unauthorized,
-        errorMessage: "Wrong auth",
-        data: null,
-    };
-},
-async checkAndUpdateRefToken(refToken: string): Promise<Result<string | null>> {
-
-    try {
-
-        const payload = await jwtServise.verifyRefreshToken(refToken);
-        if (!payload) {
-            return {
-                status: ResultStatus.Unauthorized,
-                errorMessage: "Invalid token payload",
-                data: null
-            };
-        }
-
-
-
-        const safeToken = await jwtRepository.findRefreshToken(payload)
-
-        if (safeToken === null) {
-            return {
-                status: ResultStatus.Unauthorized,
-                errorMessage: 'bad old token',
+                status: ResultStatus.BadRequest,
+                extensions: [{ field: "code", message: 'Failed to send confirmation email pasword' }],
                 data: null
             }
         }
-        console.log('!!!! ', refToken)
-        console.log('2222 ', safeToken)
-        if (refToken !== safeToken) {
-            return {
-                status: ResultStatus.Unauthorized,
-                errorMessage: "token   invalid",
-                data: null,
-            }
+
+        const jwtPayload = {
+            id: user._id.toString(),
+            deviceId: uuidv4()
         }
 
+        const token: string = await jwtServise.createToken(jwtPayload)
+        const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
+        
+        const decoded = await jwtServise.decodeToken(refreshToken)
+       /* const inputData = {
+            id: jwtPayload,
+            token: refreshToken
+        };*/
+       // const isJwt = await jwtRepository.saveRefreshToken(jwtPayload, refreshToken)
 
-        console.log('hanting ', payload)
-
-        const userId = payload;
-        console.log(userId + 'Failed')
-        const user = await userRepository.findUser(new ObjectId(userId));
-
-        if (user === null) {
-            return {
-                status: ResultStatus.Unauthorized,
-                errorMessage: "User not found",
-                data: null,
-            };
+        const dataForSession = {
+            ip: ip ,
+            title : title ,
+            user_id: jwtPayload.id,
+            deviceId: jwtPayload.deviceId,
+            lastActiveDate: new Date() , 
+            iat: decoded.iat , 
+            exp: decoded.exp,
         }
 
-        const token: string = await jwtServise.createToken(userId)
-        const refreshToken: string = await jwtServise.createRefreshToken(userId)
-
-
-        const remove = await jwtRepository.saveRefreshToken(payload, refreshToken)
-
+        const makeSession = await ipControlRepository.saveIp(dataForSession)
 
 
         return {
             status: ResultStatus.Success,
             data: { token, refreshToken }
-
-
-
+        }}catch(err){
+            return {
+                status: ResultStatus.BadRequest,
+                errorMessage: 'some wrong in login service',
+                data: null
+            }
         }
-    } catch (err) {
-        console.error("FIRST" + err)
+    },
+
+    async checkAccessToken(authHeader: string): Promise<Result<IdType | null>> {
+        const [schema, token] = authHeader.split(" ");
+
+        if (schema !== "Bearer") {
+            return {
+                status: ResultStatus.Unauthorized,
+                errorMessage: "Wrong auth",
+                data: null,
+            };
+        }
+
+        const payload = await jwtServise.verifyToken(token);
+
+        if (payload) {
+            const userId = payload;
+
+            const user = await userRepository.findUser(new ObjectId(userId));
+
+            if (!user) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    errorMessage: "User not found",
+                    data: null,
+                };
+            }
+
+            return {
+                status: ResultStatus.Success,
+                data: { id: userId } as IdType, // Assuming userId is a string
+            };
+        }
+
         return {
             status: ResultStatus.Unauthorized,
-            errorMessage: "1token not good",
+            errorMessage: "Wrong auth",
             data: null,
+        };
+    },
+
+    async checkAndUpdateRefToken(refToken: string): Promise<Result<string | null>> {
+
+        try {
+
+            const payload = await jwtServise.verifyRefreshToken(refToken);
+            if (!payload) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    errorMessage: "Invalid token payload",
+                    data: null
+                };
+            }
+
+            const safeToken = await jwtRepository.findRefreshToken(payload)
+
+            if (safeToken === null) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    errorMessage: 'bad old token',
+                    data: null
+                }
+            }
+
+            if (refToken !== safeToken) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    errorMessage: "token   invalid",
+                    data: null,
+                }
+            }
+
+            const userId = payload;
+            const user = await userRepository.findUser(new ObjectId(userId));
+
+            if (user === null) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    errorMessage: "User not found",
+                    data: null,
+                };
+            }
+
+            const token: string = await jwtServise.createToken(userId)
+            const refreshToken: string = await jwtServise.createRefreshToken(userId)
+            const remove = await jwtRepository.saveRefreshToken(payload, refreshToken)
+
+            return {
+                status: ResultStatus.Success,
+                data: { token, refreshToken }
+            }
+        } catch (err) {
+            console.error("FIRST" + err)
+            return {
+                status: ResultStatus.Unauthorized,
+                errorMessage: "1token not good",
+                data: null,
+            }
         }
-    }
-},
+    },
 }

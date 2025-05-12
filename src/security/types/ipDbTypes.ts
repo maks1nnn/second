@@ -7,11 +7,12 @@ export type OutputIpType = {
 
 export type InputIpType = {
     ip: string,
+    title : string,
     user_id: string,
     deviceId: string,
-    lastActiveDate : string,
-    iat: string,
-    exp: string,
+    lastActiveDate : Date,
+    iat: number,
+    exp: number,
 }
 
 export type DeleteSessionByDeviceIdType = {
