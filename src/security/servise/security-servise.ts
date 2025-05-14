@@ -1,6 +1,7 @@
 import { Result } from "express-validator";
 import { ObjectId } from "mongodb";
 import { ipControlCollection } from "../../db/mongo-db";
+import { jwtServise } from "../../domain/jwt-servise";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { ipControlRepository } from "../repository/ipRepository";
 import { DeleteSessionByDeviceIdType } from "../types/ipDbTypes";
@@ -8,8 +9,9 @@ import { DeleteSessionByDeviceIdType } from "../types/ipDbTypes";
 
 export const securityService = {
 
-    async getAllSessions(id:ObjectId ){
-        const session = await ipControlRepository.findAllSessionByUserId(id)
+    async getAllSessions(refreshToken:string ){
+        const decoded = await jwtServise.decodeToken(refreshToken)
+        const session = await ipControlRepository.findAllSessionByUserId(decoded.iat)
          if(session === null){
             return{
                 status: ResultStatus.Unauthorized,

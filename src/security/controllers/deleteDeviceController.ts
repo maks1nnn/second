@@ -16,7 +16,7 @@ export const deleteUserSessionController = async(req:Request,res:Response) => {
         const result = await securityService.deleteUserSession(inputData)
 
         if(result.status === ResultStatus.Unauthorized){
-            res.status(401).send()
+            res.status(404).send()
             return
         }
     }catch(err){

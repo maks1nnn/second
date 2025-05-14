@@ -62,7 +62,7 @@ export const loginServise = {
             iat: decoded.iat , 
             exp: decoded.exp,
         }
-
+       
         const makeSession = await ipControlRepository.saveIp(dataForSession)
 
 

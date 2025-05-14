@@ -5,6 +5,7 @@ import { securityService } from "../servise/security-servise";
 
 
 export const deleteAllDevicesController = async(req:Request,res:Response) => {
+    console.log('EEEEEEEEEEEEEEE')
     try{
         if(req.userId === null){
             res.status(401).send()

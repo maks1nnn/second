@@ -5,12 +5,11 @@ import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { securityService } from "../servise/security-servise";
 
 export const getDeviceController = async(req:Request,res:Response) => {
+    console.log(req.cookies.refreshToken+'HHHHHHHEEEEEEELLLLLLLLLPPPPPPPPPP')
+         
     try{
-        if(req.userId === null){
-            res.status(401).send()
-            return
-        }
-        const result = await securityService.getAllSessions(new ObjectId(req.userId) )
+         
+        const result = await securityService.getAllSessions( req.cookies.refreshToken  )
 
         if(result.status === ResultStatus.Unauthorized){
             res.status(401).send()
@@ -21,6 +20,6 @@ export const getDeviceController = async(req:Request,res:Response) => {
         }
     }catch(err){
         console.log(err)
-        res.status(502).send()
+        res.status(502).send('some wrong')
     }
 }

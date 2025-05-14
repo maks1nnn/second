@@ -8,7 +8,7 @@ export const ipControlRepository = {
     
     async saveIp(inputData:InputIpType){
        try{ 
-        const insertInfo = await ipControlCollection.insertOne(inputData)
+        const result = await ipControlCollection.insertOne(inputData)
           
        }catch(error){
         console.log(error)
@@ -24,13 +24,17 @@ export const ipControlRepository = {
         }
         const session = await ipControlCollection.findOne(query)
         if(session){
+
             return session
         }else{return null}
     },
 
-    async findAllSessionByUserId(userId:ObjectId){
-        const data = await ipControlCollection.find({user_id: userId})
+    async findAllSessionByUserId(iat:number){
+        console.log('fffffffffffffffffff')
+        const data = await ipControlCollection.find({iat: iat})
+        console.log(data + 'wath me')
         if(data){
+            
             return data
         }else{
             return null
