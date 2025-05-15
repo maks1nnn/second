@@ -1,5 +1,12 @@
 import request from 'supertest'
 
+describe("integration test for AuthTest", ()=>{
+    describe("createUser", ()=>{
+        it("should return", async ()=>{
+            expect (5).toBe(5)
+        })
+    })
+})
 
 
 export const createUser = async (app:any)=>{

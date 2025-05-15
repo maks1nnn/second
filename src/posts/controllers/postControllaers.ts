@@ -87,7 +87,7 @@ export const postControllers = {
 
     async getAllPostComments(req: Request, res: Response) {
         const isPost = await postServise.findPosts(new ObjectId(req.params.postId))
-        if ( isPost === null) {
+        if ( isPost === null  ) {
             return res.status(404).end() // добавляем return, чтобы остановить выполнение функции
         }
     

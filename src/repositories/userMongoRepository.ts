@@ -13,15 +13,15 @@ export const userRepository = {
         try {
             const insertInfo = await userCollection.insertOne(inputData)
             return insertInfo.insertedId; // Возвращаем ID созданного пользователя
-        } catch (e) {
-            console.log(e)
+        } catch (err) {
+            console.log(err)
             return false; // или обработайте ошибку соответствующим образом
         }
     },
 
     async findUser(id: ObjectId) {
         const user = await userCollection.findOne({ _id: id })
-        if (user  ) {
+        if (user) {
             return user
 
 
@@ -35,7 +35,7 @@ export const userRepository = {
     },
 
     async findByLogin(data: string) {
-        const checkUser = await userCollection.findOne({login: data });
+        const checkUser = await userCollection.findOne({ login: data });
         if (checkUser) {
             return checkUser
         }
@@ -45,15 +45,14 @@ export const userRepository = {
 
     async findByEmail(data: string) {
         const checkUser = await userCollection.findOne({ email: data })
-        console.log(checkUser)
         if (checkUser) {
             return checkUser
         } else { return false }
     },
 
     async findUserByConfirmationCode(code: string) {
-        console.log(code)
-        const user = await userCollection.findOne({ "emailConfirmation.confirmationCode" : code })
+        
+        const user = await userCollection.findOne({ "emailConfirmation.confirmationCode": code })
 
         if (user) {
             return user
@@ -74,15 +73,15 @@ export const userRepository = {
     async updateUserConfirmInfo(id: ObjectId, confirmCode: string, confirmDate: Date) {
         const result = await userCollection.updateOne({ _id: id }, {
             $set: {
-                "emailConfirmation.confirmationCode" : confirmCode,
-                "emailConfirmation.expirationDate" : confirmDate,
+                "emailConfirmation.confirmationCode": confirmCode,
+                "emailConfirmation.expirationDate": confirmDate,
             }
         })
         return result.modifiedCount === 1
     },
 
     async findByEmailOrLogin(loginOrEmail: string) {
-         
+
         const user = await userCollection.findOne({
             $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
         });

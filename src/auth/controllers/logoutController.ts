@@ -46,14 +46,7 @@ export const logoutController = async (req: Request, res: Response) => {
             }
         
             const delToken = await jwtRepository.logoutAllDevices(payload)
-        
-        
-        /*const payload = await jwtServise.verifyToken(refreshToken)
-        if (payload === null) {
-            return res.status(401).send()
-        }*/
-
-
+            
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",

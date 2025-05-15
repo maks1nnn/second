@@ -10,14 +10,15 @@ import { userValidationMiddlevare } from '../users/middlewars/usersMiddleware'
 import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResultMiddlewares'
 import { logoutController } from "../auth/controllers/logoutController";
 import { refreshTokenController } from "../auth/controllers/refreshTokenController";
+import { checkRateLimit } from "../middlewares/checkRateLimit";
 
 export const authRouter = Router()
 
-authRouter.post('/login', loginController)
+authRouter.post('/login', checkRateLimit , loginController)
 authRouter.get('/me',  authJWTMiddleware, authMeController)
-authRouter.post('/registration-confirmation', registrationConfirmationController )
-authRouter.post('/registration',...userValidationMiddlevare, inputCheckErrorsMiddleware, registrationController)
-authRouter.post('/registration-email-resending', registrationEmailResendingController)
+authRouter.post('/registration-confirmation',checkRateLimit, registrationConfirmationController )
+authRouter.post('/registration',...userValidationMiddlevare,checkRateLimit, inputCheckErrorsMiddleware, registrationController)
+authRouter.post('/registration-email-resending',checkRateLimit, registrationEmailResendingController)
 authRouter.post('/refresh-token', refreshTokenController)
 authRouter.post('/logout', logoutController)
  

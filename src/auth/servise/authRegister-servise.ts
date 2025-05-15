@@ -131,7 +131,7 @@ export const authServise = {
             }
         }
         const userConfirm = isUser.emailConfirmation.isConfirmed
-        console.log(userConfirm)
+         
         if (userConfirm === true) {
             return {
                 status: ResultStatus.BadRequest,

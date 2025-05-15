@@ -6,7 +6,7 @@ import { ResultStatus } from "../../input-uotput-types/resultCode"
 
 
 export const loginController = async (req: Request, res: Response) => {
-     
+
     try {
         const title = req.headers['user-agent'] || 'Unknown Device'
         const ip = req.ip || 'djondow'
@@ -15,7 +15,6 @@ export const loginController = async (req: Request, res: Response) => {
         if (result.status === ResultStatus.BadRequest) {
             res.status(401).send({
                 errorsMessages: result.extensions
-
             })
             return
 
