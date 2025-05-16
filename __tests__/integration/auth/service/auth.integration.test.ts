@@ -1,15 +1,67 @@
-import{ MongoMemoryServer} from 'mongodb-memory-server-core'
+/*import{ MongoMemoryServer} from 'mongodb-memory-server-core'
 import { db } from '../../../../src/db/mongo-db'
-import { testSeeder } from '../../../e2e/utils/test.seeder'
+ 
 import {authServise} from '../../../../src/auth/servise/auth-servise'
 import { nodemailerService } from '../../../../src/common/adapters/nodemailer-adapter'
 import { ResultStatus } from '../../../../src/input-uotput-types/resultCode'
 import { userRepository } from '../../../../src/repositories/userMongoRepository'
 import { randomUUID } from 'crypto'
-import { Result } from '../../../../src/comments/types/comment-types'
+import { Result } from '../../../../src/comments/types/comment-types'*/
+import MongoMemoryServer from 'mongodb-memory-server-core'
+import { authServise } from '../../../../src/auth/servise/authRegister-servise'
+import { InputUserType } from '../../../../src/users/types/user-types'
+import { testSeeder } from '../../../e2e/utils/test.seeder'
+import { Db, MongoClient } from 'mongodb'
+import { emailServiceMock } from '../../../e2e/utils/mocks/mocks'
+import { nodemailerService } from '../../../../src/common/adapters/nodemailer-adapter'
+import { ResultStatus } from '../../../../src/input-uotput-types/resultCode'
+
+describe("integration test for AuthTest", async () => {
+    let mongoServer: MongoMemoryServer;
+    let connection: MongoClient;
+    let db: Db;
+    beforeAll(async () => {
+        const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
+        const uri = mongoServer.getUri();
+        connection = await MongoClient.connect(uri);
+        db = connection.db();
+    })
+    afterAll(async () => {
+        await connection.close();
+        await mongoServer.stop();
+    })
+    beforeEach(async () => {
+        await db.dropDatabase();
+    })
+     
+    describe("createUser", () => {
+
+    const registerUserCase = authServise.registrationUser
+
+    nodemailerService.sendEmail = emailServiceMock.sendEmail
+
+    
+        it("should return ", async () => {
+
+            const { login, email, password } = testSeeder.createUserDto()
+            const result = await registerUserCase({ login, email, password })
+
+            expect(result).toEqual( {
+                status: ResultStatus.Success,
+                data: null 
+            })
+        })
 
 
-describe('user registration', () => {
+
+
+
+
+
+    })
+})
+
+/*describe('user registration', () => {
     const registrationUserCase = authServise.registrationUser
 
     nodemailerService.sendEmail = jest.fn().mockImplementation(async(recipient:string,code: string,emailTemplate:string):Promise<boolean> => true)
@@ -37,4 +89,4 @@ describe('user registration', () => {
         expect(result.data).toBeNull()
     })
 
-})
+})*/

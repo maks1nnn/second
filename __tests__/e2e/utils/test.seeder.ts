@@ -17,7 +17,7 @@ type RegisterUserType = {
 
 export const testSeeder = {
     get userCollection(){
-        return db.getCollections().userCollection;
+        return db.collection('user') ;
     },
     createUserDto() {
         return {
