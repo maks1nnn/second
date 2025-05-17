@@ -15,26 +15,26 @@ import { Db, MongoClient } from 'mongodb'
 import { emailServiceMock } from '../../../e2e/utils/mocks/mocks'
 import { nodemailerService } from '../../../../src/common/adapters/nodemailer-adapter'
 import { ResultStatus } from '../../../../src/input-uotput-types/resultCode'
+import {db} from './../../../e2e/helpers/db'
+import {SETTINGS} from './../../../../src/settings'
 
-describe("integration test for AuthTest", async () => {
+describe("integration test for AuthTest",   () => {
     let mongoServer: MongoMemoryServer;
     let connection: MongoClient;
-    let db: Db;
+     
     beforeAll(async () => {
         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
-        const uri = mongoServer.getUri();
-        connection = await MongoClient.connect(uri);
-        db = connection.db();
+        SETTINGS.MONGO_URL = mongoServer.getUri();
+        await db.run()
     })
     afterAll(async () => {
-        await connection.close();
-        await mongoServer.stop();
+        await db.stop();
     })
     beforeEach(async () => {
-        await db.dropDatabase();
+        await db.drop();
     })
      
-    describe("createUser", () => {
+     
 
     const registerUserCase = authServise.registrationUser
 
@@ -59,7 +59,7 @@ describe("integration test for AuthTest", async () => {
 
 
     })
-})
+ 
 
 /*describe('user registration', () => {
     const registrationUserCase = authServise.registrationUser

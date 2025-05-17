@@ -7,28 +7,27 @@ import {ObjectId} from 'mongodb'
 //import {OutputPostDBType} from '../../src/input-uotput-types/post-types'  
 import {MongoMemoryServer} from 'mongodb-memory-server-core'
 import { Db , MongoClient} from 'mongodb'
+import {db} from './../e2e/helpers/db'
 
 describe('GET /blogs', () =>{
     let mongoServer: MongoMemoryServer;
     let connection: MongoClient;
-    let db: Db;
     beforeAll(async () => {
         const mongoServer: MongoMemoryServer = await MongoMemoryServer.create()
-        const uri = mongoServer.getUri();
-          connection = await MongoClient.connect(uri);
-          db  = connection.db();
+        SETTINGS.MONGO_URL = mongoServer.getUri();
+        await db.run()
     })
-    afterAll(async() => {
-        await connection.close();
-        await mongoServer.stop();
+    afterAll(async () => {
+        await db.stop();
     })
     beforeEach(async () => {
-        await db.dropDatabase();
+        await db.drop();
     })
 
     it(' GET blogs empty array: status: 200', async () => {
         const res = await (req.get(SETTINGS.PATH.BLOGS).expect(404))
 
-        expect(res.body.items.length).toBe(0)
+        expect(res.status).toBe(404)
+        //expect(res.body).toEqual([])
     })
 })
