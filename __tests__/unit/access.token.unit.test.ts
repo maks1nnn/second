@@ -1,9 +1,10 @@
-import { db } from  '../../src/db/mongo-db'
+ 
 import MongoMemoryServer from "mongodb-memory-server-core"
 import { SETTINGS } from "../../src/settings"
-import {authServise} from '../../src/auth/servise/auth-servise'
+import { authServise } from '../../src/auth/servise/authRegister-servise'
+import {loginServise} from '../../src/auth/servise/authLogin-servise'
 import { ResultStatus } from '../../src/input-uotput-types/resultCode'
-
+import { db } from './../e2e/helpers/db'
 
 describe('UNIT', ()=>{
 
@@ -24,7 +25,7 @@ describe('UNIT', ()=>{
 
     afterAll( (done)=> done())
 
-    const checkAccessTokenUseCase = authServise.checkAccessToken;
+    const checkAccessTokenUseCase = loginServise.checkAccessToken;
 
     it( 'should not verify noBearer auth', async () => {
         const result = await checkAccessTokenUseCase("Basic sefdofgf")

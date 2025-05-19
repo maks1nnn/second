@@ -56,7 +56,7 @@ export const blogControllers = {
         res.status(201).json(newBlog)}}else {res.status(404).end()}
 
 
-    4.},
+     },
 
     async createPostInBlog(req: Request<{blogId:string},{},InputPostInBlogType> , res: Response<OutputErrorsType | OutputPostDBType>) {
         const insertInfo = await postServise.createPostInBlog(req.body,req.params.blogId)

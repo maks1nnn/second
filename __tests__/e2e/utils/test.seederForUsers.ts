@@ -1,7 +1,7 @@
 import { randomUUID } from "crypto";
 import  {add}  from 'date-fns/add';
 import { db} from "../../../src/db/mongo-db";
-import {UserDBType}  from '../../../src/db/user-db-types'
+import {UserDBType, UserInputType}  from '../../../src/db/user-db-types'
  
  
 
@@ -26,13 +26,13 @@ export const testSeeder = {
             password: '123456789'
         }
     },
-    createUserDtos(count: number): RegisterUserType[] {
-        const users: RegisterUserType[] = [];
+    createUserDtos(count: number): UserInputType[] {
+        const users: UserInputType[] = [];
 
         for (let i = 0; i < count; i++) {
             users.push({
                 login: `test${i}`,
-                pass: '12345678',
+                password: '12345678',
                 email: `test${i}@gmail.com`,
             });
         }

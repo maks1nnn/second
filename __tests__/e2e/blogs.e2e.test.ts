@@ -1,15 +1,16 @@
-import {req} from '../helpers/req'
+import { req } from '../helpers/req'
 import { SETTINGS } from '../../src/settings'
-import {createBlogs} from './helpers/blog-helpers'
-import {createPosts} from './helpers/post-helpers'
-import {ObjectId} from 'mongodb'
+import { createBlogs } from './helpers/blog-helpers'
+import { createPosts } from './helpers/post-helpers'
+import { ObjectId } from 'mongodb'
 //import {OutputBlogType} from '../../src/input-uotput-types/blog-types'
 //import {OutputPostDBType} from '../../src/input-uotput-types/post-types'  
-import {MongoMemoryServer} from 'mongodb-memory-server-core'
-import { Db , MongoClient} from 'mongodb'
-import {db} from './../e2e/helpers/db'
+import { MongoMemoryServer } from 'mongodb-memory-server-core'
+import { Db, MongoClient } from 'mongodb'
+import { db } from './../e2e/helpers/db'
+import { testSeeder } from './../e2e/utils/test.seederForBlogs'
 
-describe('GET /blogs', () =>{
+describe('BLOGS_TEST', () => {
     let mongoServer: MongoMemoryServer;
     let connection: MongoClient;
     beforeAll(async () => {
@@ -25,9 +26,21 @@ describe('GET /blogs', () =>{
     })
 
     it(' GET blogs empty array: status: 200', async () => {
-        const res = await (req.get(SETTINGS.PATH.BLOGS).expect(404))
+        const res = await req.get(SETTINGS.PATH.BLOGS).expect(404)
 
         expect(res.status).toBe(404)
         //expect(res.body).toEqual([])
+    })
+    it('Post blogs create new blog, async', async () => {
+        const data = testSeeder.createBlogDto()
+        const ADMIN_AUTH = 'admin:qwerty'; // Пример, должен быть такой же, как в middleware
+        const CORRECT_BASIC_AUTH = `Basic ${Buffer.from(ADMIN_AUTH).toString('base64')}`;
+        const result = await req.post(SETTINGS.PATH.BLOGS)
+            .set('Authorization', CORRECT_BASIC_AUTH)
+            .send(data)
+            .expect(200)
+
+        expect(result.status).toBe(200)
+
     })
 })
