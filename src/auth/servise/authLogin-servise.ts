@@ -29,7 +29,7 @@ export const loginServise = {
         
         const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
         if (user !== null) { console.log("userLOGIN: " + user.login) }
-        if (user !== null) { console.log("userLOGIN: " + user.emailConfirmation.isConfirmed) }
+         
         if (user === null || !(await bcryptServise.checkPassword(input.password, user.passwordHash))) {
             return {
                 status: ResultStatus.BadRequest,
@@ -70,6 +70,7 @@ export const loginServise = {
             status: ResultStatus.Success,
             data: { token, refreshToken }
         }}catch(err){
+            console.log(err)
             return {
                 status: ResultStatus.BadRequest,
                 errorMessage: 'some wrong in login service',

@@ -4,7 +4,7 @@ import { SETTINGS } from "../../src/settings"
 import { authServise } from '../../src/auth/servise/authRegister-servise'
 import {loginServise} from '../../src/auth/servise/authLogin-servise'
 import { ResultStatus } from '../../src/input-uotput-types/resultCode'
-import { db } from './../e2e/helpers/db'
+import { db } from '../e2e/helpers/db'
 
 describe('UNIT', ()=>{
 
