@@ -34,7 +34,7 @@ describe('BLOGS_TEST', () => {
     it('Post blogs create new blog, async', async () => {
         const data = testSeeder.createBlogDto()
         const ADMIN_AUTH = 'admin:qwerty'; // Пример, должен быть такой же, как в middleware
-        const CORRECT_BASIC_AUTH = `Basic ${Buffer.from(ADMIN_AUTH).toString('base64')}`;
+        const CORRECT_BASIC_AUTH = `Basic YWRtaW46cXdlcnR5`;
         const result = await req.post(SETTINGS.PATH.BLOGS)
             .set('Authorization', CORRECT_BASIC_AUTH)
             .send(data)

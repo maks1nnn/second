@@ -47,6 +47,7 @@ describe("registration  test for LoginTest",   () => {
                     refreshToken: expect.any(String)
                  }}
         )
+        expect(result.data.token).not.toBe(result.data.refreshToken)
     })
 })
      
