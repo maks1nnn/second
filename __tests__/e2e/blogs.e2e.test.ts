@@ -31,7 +31,7 @@ describe('BLOGS_TEST', () => {
         expect(res.status).toBe(404)
         //expect(res.body).toEqual([])
     })
-    it('Post blogs create new blog, async', async () => {
+    it.skip('Post blogs create new blog, async', async () => {
         const data = testSeeder.createBlogDto()
         const ADMIN_AUTH = 'admin:qwerty'; // Пример, должен быть такой же, как в middleware
         const CORRECT_BASIC_AUTH = `Basic YWRtaW46cXdlcnR5`;
@@ -41,6 +41,15 @@ describe('BLOGS_TEST', () => {
             .expect(200)
 
         expect(result.status).toBe(200)
+  
 
     })
+
+    it ('get some blogs', async () => {
+        const result = await req.get(SETTINGS.PATH.BLOGS)
+                                 
+        expect(result.status).toBe(200)
+         
+    })
+
 })

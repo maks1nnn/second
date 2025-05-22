@@ -24,6 +24,7 @@ describe('security test', () => {
     beforeEach(async () => {
         await db.drop();
     })
+    const mockNext = jest.fn();
 
     const loginUserCase = loginServise.loginUser
     userRepository.findByEmailOrLogin = checkEmailOrLoginMock.findByEmailOrLogin
@@ -39,6 +40,7 @@ describe('security test', () => {
 
         const result = await loginUserCase(input, title, ip)
         const session = await req.get(SETTINGS.PATH.SECURITY)
+        .set('192.168.1.1', '/test')
         .expect(200)
     })
 })
