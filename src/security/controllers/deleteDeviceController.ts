@@ -5,17 +5,19 @@ import { securityService } from "../servise/security-servise";
 
 export const deleteUserSessionController = async(req:Request,res:Response) => {
     try{
+        console.log('heeeeelp')
         if(req.userId === null){
             res.status(401).send()
             return
         }
         const inputData = {
             id: req.userId,
-            deviceId: req.cookies.deviceId}
+            deviceId: req.params.deviceId}
 
         const result = await securityService.deleteUserSession(inputData)
 
         if(result.status === ResultStatus.Unauthorized){
+            console.log('ebanina')
             res.status(404).send()
             return
         }

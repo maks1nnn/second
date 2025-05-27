@@ -8,9 +8,10 @@ import { ResultStatus } from "../../input-uotput-types/resultCode"
 export const loginController = async (req: Request, res: Response) => {
 
     try {
+        
         const title = req.headers['user-agent'] || 'Unknown Device'
         const ip = req.ip || 'djondow'
-
+        console.log(title + '   ' + ip)
         const result = await loginServise.loginUser(req.body, title, ip)
         if (result.status === ResultStatus.BadRequest) {
             res.status(401).send({
@@ -28,7 +29,7 @@ export const loginController = async (req: Request, res: Response) => {
         }
         if (result.status === ResultStatus.Success) {
             const { token, refreshToken } = result.data!;
-            console.log(result.data)
+            //console.log(result.data)
             res
                 .cookie('refreshToken', refreshToken, {
                     httpOnly: true, // Защищает от XSS атак
