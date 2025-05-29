@@ -7,7 +7,7 @@ export const deleteUserSessionController = async(req:Request,res:Response) => {
     try{
         console.log('heeeeelp')
         if(req.userId === null){
-            res.status(401).send()
+            res.status(404).send()
             return
         }
         const inputData = {

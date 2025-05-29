@@ -37,7 +37,7 @@ export const loginServise = {
                 data: null
             }
         }
-
+         
         const jwtPayload = {
             id: user._id.toString(),
             deviceId: uuidv4()
@@ -47,12 +47,7 @@ export const loginServise = {
         const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
         
         const decoded = await jwtServise.decodeToken(refreshToken)
-       /* const inputData = {
-            id: jwtPayload,
-            token: refreshToken
-        };*/
-       // const isJwt = await jwtRepository.saveRefreshToken(jwtPayload, refreshToken)
-
+        
         const dataForSession = {
             ip: ip ,
             title : title ,
@@ -64,8 +59,8 @@ export const loginServise = {
         }
        
         const makeSession = await ipControlRepository.saveIp(dataForSession)
-
-
+        const session =await ipControlRepository.findAllSessionByUserId(jwtPayload.id) 
+        console.log(session)
         return {
             status: ResultStatus.Success,
             data: { token, refreshToken }
@@ -131,9 +126,9 @@ export const loginServise = {
                 };
             }
 
-            const safeToken = await jwtRepository.findRefreshToken(payload)
-
-            if (safeToken === null) {
+            //const safeToken = await jwtRepository.findRefreshToken(payload)
+            const session = await ipControlRepository.findSessionByIdAndDeviceId(payload)
+            if (session === null) {
                 return {
                     status: ResultStatus.Unauthorized,
                     errorMessage: 'bad old token',
@@ -141,7 +136,7 @@ export const loginServise = {
                 }
             }
 
-            if (refToken !== safeToken) {
+            if (payload.iat !== session.iat) {
                 return {
                     status: ResultStatus.Unauthorized,
                     errorMessage: "token   invalid",
@@ -149,7 +144,7 @@ export const loginServise = {
                 }
             }
 
-            const userId = payload;
+            const userId = payload.id;
             const user = await userRepository.findUser(new ObjectId(userId));
 
             if (user === null) {
@@ -159,9 +154,12 @@ export const loginServise = {
                     data: null,
                 };
             }
-
-            const token: string = await jwtServise.createToken(userId)
-            const refreshToken: string = await jwtServise.createRefreshToken(userId)
+            const jwtPayload = {
+                id: user._id.toString(),
+                deviceId: session.deviceId
+            }
+            const token: string = await jwtServise.createToken(jwtPayload)
+            const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
             const remove = await jwtRepository.saveRefreshToken(payload, refreshToken)
 
             return {

@@ -9,9 +9,9 @@ import { DeleteSessionByDeviceIdType } from "../types/ipDbTypes";
 
 export const securityService = {
 
-    async getAllSessions(refreshToken:string ){
-        const decoded = await jwtServise.decodeToken(refreshToken)
-        const session = await ipControlRepository.findAllSessionByUserId(decoded.iat)
+    async getAllSessions(id:string ){
+       // const decoded = await jwtServise.decodeToken(refreshToken)
+        const session = await ipControlRepository.findAllSessionByUserId(id)
          if(session === null){
             return{
                 status: ResultStatus.Unauthorized,
