@@ -7,5 +7,5 @@ import { authJWTMiddleware } from "../auth/middlewares/authJWTMiddleware";
 export const securityRouter = Router()
 
 securityRouter.get('/devices', authJWTMiddleware, getDeviceController)
-securityRouter.delete('/devices', deleteAllDevicesController)
-securityRouter.delete('/devices/:deviseId', deleteUserSessionController)
+securityRouter.delete('/devices',authJWTMiddleware, deleteAllDevicesController)
+securityRouter.delete('/devices/:deviseId',authJWTMiddleware, deleteUserSessionController)

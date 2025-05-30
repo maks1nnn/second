@@ -15,7 +15,7 @@ export const SETTINGS ={
         AUTH: '/auth',
         COMMENT: '/comments',
         SECURITY: '/security'
-    },
+    },              
     ADMIN_AUTH: {
         admin:'qwerty'
     },

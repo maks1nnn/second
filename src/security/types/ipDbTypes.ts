@@ -26,7 +26,7 @@ export type FindSessionByDevice = {
 }
 
 export type RefreshSessionDataType = {
-    ip: string,
+    id: string,
     deviceId : string,
     iat: number,
 }

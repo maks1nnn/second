@@ -42,7 +42,7 @@ export const securityService = {
         }
     },
 
-    async deleteAllSessions(userId:ObjectId){
+    async deleteAllSessions(userId:string){
         const result = await ipControlRepository.deleteAllSesionsByUserId(userId)
         if (result === null){
             return{

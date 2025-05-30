@@ -19,6 +19,6 @@ authRouter.get('/me',  authJWTMiddleware, authMeController)
 authRouter.post('/registration-confirmation',checkRateLimit, registrationConfirmationController )
 authRouter.post('/registration',...userValidationMiddlevare,checkRateLimit, inputCheckErrorsMiddleware, registrationController)
 authRouter.post('/registration-email-resending',checkRateLimit, registrationEmailResendingController)
-authRouter.post('/refresh-token', refreshTokenController)
-authRouter.post('/logout', logoutController)
+authRouter.post('/refresh-token',authJWTMiddleware, refreshTokenController)
+authRouter.post('/logout',authJWTMiddleware, logoutController)
  

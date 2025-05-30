@@ -3,6 +3,8 @@ import { jwtServise } from "../../domain/jwt-servise"
 import jwt from "jsonwebtoken";
 import { jwtRepository } from "../../repositories/jwt-repositories";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
+import { ipControlRepository } from "../../security/repository/ipRepository";
+import { securityService } from "../../security/servise/security-servise";
 
 export const logoutController = async (req: Request, res: Response) => {
     try {
@@ -33,19 +35,21 @@ export const logoutController = async (req: Request, res: Response) => {
 
         const payload = await jwtServise.verifyRefreshToken(refreshToken)      
         
-            const safeToken = await jwtRepository.findRefreshToken(payload)
+            //const safeToken = await jwtRepository.findRefreshToken(payload)
+            const session = await ipControlRepository.findSessionByIdAndDeviceId(payload)
             
-            if(safeToken  === null){
+            if(session  === null){
                 return res.status(401).json({message: 'token is bad'})
                 
             }
 
-           if(refreshToken !== safeToken ){
+           if(payload.iat !== session.iat ){
                 return res.status(401).json({message: 'token is bad'})
                  
             }
         
-            const delToken = await jwtRepository.logoutAllDevices(payload)
+            //const delToken = await jwtRepository.logoutAllDevices(payload)
+            const outDevice = await securityService.deleteUserSession(payload)
             
         res.clearCookie("refreshToken", {
             httpOnly: true,

@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { add } from "date-fns";
- 
+
 import { InputUserType, IdType, UserValidationRules } from "../../users/types/user-types";
 import { userRepository } from "../../repositories/userMongoRepository";
 import { bcryptServise } from "../../domain/hashServise";
@@ -24,47 +24,48 @@ import { decode } from "punycode";
 
 export const loginServise = {
 
-    async loginUser(input: InputAuthType,title: string, ip:string ): Promise<Result<string | null  >> {
-        try{
-        
-        const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
-        if (user !== null) { console.log("userLOGIN: " + user.login) }
-         
-        if (user === null || !(await bcryptServise.checkPassword(input.password, user.passwordHash))) {
-            return {
-                status: ResultStatus.BadRequest,
-                extensions: [{ field: "code", message: 'Failed to send confirmation email pasword' }],
-                data: null
-            }
-        }
-         
-        const jwtPayload = {
-            id: user._id.toString(),
-            deviceId: uuidv4()
-        }
+    async loginUser(input: InputAuthType, title: string, ip: string): Promise<Result<string | null>> {
+        try {
 
-        const token: string = await jwtServise.createToken(jwtPayload)
-        const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
-        
-        const decoded = await jwtServise.decodeToken(refreshToken)
-        
-        const dataForSession = {
-            ip: ip ,
-            title : title ,
-            user_id: jwtPayload.id,
-            deviceId: jwtPayload.deviceId,
-            lastActiveDate: new Date() , 
-            iat: decoded.iat , 
-            exp: decoded.exp,
-        }
-       
-        const makeSession = await ipControlRepository.saveIp(dataForSession)
-        const session =await ipControlRepository.findAllSessionByUserId(jwtPayload.id) 
-        console.log(session)
-        return {
-            status: ResultStatus.Success,
-            data: { token, refreshToken }
-        }}catch(err){
+            const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
+            if (user !== null) { console.log("userLOGIN: " + user.login) }
+
+            if (user === null || !(await bcryptServise.checkPassword(input.password, user.passwordHash))) {
+                return {
+                    status: ResultStatus.BadRequest,
+                    extensions: [{ field: "code", message: 'Failed to send confirmation email pasword' }],
+                    data: null
+                }
+            }
+
+            const jwtPayload = {
+                id: user._id.toString(),
+                deviceId: uuidv4()
+            }
+
+            const token: string = await jwtServise.createToken(jwtPayload)
+            const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
+
+            const decoded = await jwtServise.decodeToken(refreshToken)
+
+            const dataForSession = {
+                ip: ip,
+                title: title,
+                user_id: jwtPayload.id,
+                deviceId: jwtPayload.deviceId,
+                lastActiveDate: new Date(),
+                iat: decoded.iat,
+                exp: decoded.exp,
+            }
+
+            const makeSession = await ipControlRepository.saveIp(dataForSession)
+            const session = await ipControlRepository.findAllSessionByUserId(jwtPayload.id)
+            console.log(session)
+            return {
+                status: ResultStatus.Success,
+                data: { token, refreshToken }
+            }
+        } catch (err) {
             console.log(err)
             return {
                 status: ResultStatus.BadRequest,
@@ -160,7 +161,22 @@ export const loginServise = {
             }
             const token: string = await jwtServise.createToken(jwtPayload)
             const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
+            const decoded = await jwtServise.decodeToken(refreshToken)
             const remove = await jwtRepository.saveRefreshToken(payload, refreshToken)
+
+            const updateData = {
+                id: jwtPayload.id,
+                deviceId: jwtPayload.deviceId,
+                iat: decoded.iat
+            }
+            const update = await ipControlRepository.refreshSession(updateData)
+            if (update) {
+                return {
+                    status: ResultStatus.Unauthorized,
+                    errorMessage: "User not found",
+                    data: null,
+                };
+            }
 
             return {
                 status: ResultStatus.Success,
