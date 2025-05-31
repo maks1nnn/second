@@ -57,11 +57,11 @@ export const logoutController = async (req: Request, res: Response) => {
             sameSite: "strict",
         });
 
-        res.status(204).send();
+        return res.status(204).send();
 
     } catch (err) {
         console.error(err)
-        res.status(502).send()
+       return res.status(502).send()
     }
 
 }

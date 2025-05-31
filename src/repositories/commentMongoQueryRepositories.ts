@@ -54,7 +54,7 @@ export const queryCommentRepository = {
 
         }catch (e) {
             console.log(`${e} lol`)
-            return []
+            return false
         }
     }
 }

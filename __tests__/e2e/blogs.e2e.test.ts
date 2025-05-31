@@ -22,7 +22,7 @@ describe('BLOGS_TEST', () => {
         await db.stop();
     })
     beforeEach(async () => {
-        await db.drop();
+      //  await db.drop();
     })
 
     it(' GET blogs empty array: status: 200', async () => {
@@ -31,7 +31,7 @@ describe('BLOGS_TEST', () => {
         expect(res.status).toBe(404)
         //expect(res.body).toEqual([])
     })
-    it.skip('Post blogs create new blog, async', async () => {
+    it('Post blogs create new blog, async', async () => {
         const data = testSeeder.createBlogDto()
         const ADMIN_AUTH = 'admin:qwerty'; // Пример, должен быть такой же, как в middleware
         const CORRECT_BASIC_AUTH = `Basic YWRtaW46cXdlcnR5`;

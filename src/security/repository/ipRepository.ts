@@ -11,9 +11,10 @@ export const ipControlRepository = {
         // console.log(inputData+ "dddddaaaaaaaaataaaaaaaa")
         try {
             const result = await ipControlCollection.insertOne(inputData)
-            return result.insertedId
+            if(result !== undefined){return result.insertedId}else {return null }
         } catch (error) {
             console.log(error)
+            return null
         }
     },
 
@@ -85,7 +86,9 @@ export const ipControlRepository = {
             }
 
         );
-        if (result !== null) { return result.modifiedCount === 1; }
+        if (result !== null) { return result.modifiedCount === 1; }else {
+            return null
+        }
 
 
     }

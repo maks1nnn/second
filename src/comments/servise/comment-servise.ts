@@ -24,10 +24,10 @@ export const commentService = {
         }
 
         const newComment = await commentRepository.createComment(inputData)
-        if (newComment !== null){
+        if (newComment !== null && newComment !== false){
             return newComment
         } else{
-            return null}}
+            return null}}else{return null}
     },
 
     async updateComment(commentId: ObjectId , body: InputCommentType, userId: any):Promise<Result> {
