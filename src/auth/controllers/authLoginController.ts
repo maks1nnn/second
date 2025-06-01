@@ -11,7 +11,9 @@ export const loginController = async (req: Request, res: Response) => {
         
         const title = req.headers['user-agent'] || 'Unknown Device'
         const ip = req.ip || 'djondow'
-        console.log(title + '   ' + ip)
+
+        
+
         const result = await loginServise.loginUser(req.body, title, ip)
         if (result.status === ResultStatus.BadRequest) {
             res.status(401).send({

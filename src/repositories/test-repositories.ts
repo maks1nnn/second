@@ -2,10 +2,7 @@ import { db } from '../db/db'
 import {  postCollection, blogCollection, userCollection, authCollection, commentCollection, ipControlCollection, rateCollection } from '../db/mongo-db'
 
 export const testRepository = {
-    
-    
-
-
+     
    async deleteAll() {
       postCollection.deleteMany({})
       blogCollection.deleteMany({})

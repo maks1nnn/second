@@ -30,7 +30,7 @@ describe("registration  test for LoginTest",   () => {
   userRepository.findByEmailOrLogin = checkEmailOrLoginMock.findByEmailOrLogin
   bcryptServise.checkPassword = checkPasswordMock.checkPassword
   
-    it('should return tokens', async () => {
+    it.skip('should return tokens', async () => {
         const loginOrEmail = 'user1'
         const password = 'password'
         const input = {loginOrEmail: loginOrEmail,

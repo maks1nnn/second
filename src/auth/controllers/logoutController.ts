@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { jwtServise } from "../../domain/jwt-servise"
 import jwt from "jsonwebtoken";
-import { jwtRepository } from "../../repositories/jwt-repositories";
+//import { jwtRepository } from "../../repositories/jwt-repositories";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { ipControlRepository } from "../../security/repository/ipRepository";
 import { securityService } from "../../security/servise/security-servise";

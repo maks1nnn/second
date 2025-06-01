@@ -39,7 +39,7 @@ export const ipControlRepository = {
     },
 
     async findAllSessionByUserId(id: string) {
-        console.log('fffffffffffffffffff')
+         
         const data = await ipControlCollection.find({ user_id: id }).toArray()
 
 
@@ -68,6 +68,10 @@ export const ipControlRepository = {
                 { deviseId: inputData.deviceId }
             ]
         })
+        if(result.deletedCount !== 1){
+            return null}else{
+                return result.deletedCount
+            }
     },
     async refreshSession(inputData: RefreshSessionDataType) {
         const result = await ipControlCollection.findOneAndUpdate(

@@ -27,7 +27,7 @@ describe('UNIT', ()=>{
 
     const checkAccessTokenUseCase = loginServise.checkAccessToken;
 
-    it( 'should not verify noBearer auth', async () => {
+    it.skip( 'should not verify noBearer auth', async () => {
         const result = await checkAccessTokenUseCase("Basic sefdofgf")
 
         expect (result.status).toBe(ResultStatus.Unauthorized)

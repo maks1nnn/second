@@ -8,6 +8,14 @@ import { checkEmailOrLoginMock } from './utils/mocks/checkEmailOrLoginMocks'
 import { checkPasswordMock } from './utils/mocks/bcryptServceMock'
 import { userRepository } from '../../src/repositories/userMongoRepository'
 import { bcryptServise } from '../../src/domain/hashServise'
+import { app } from '../../src/app'
+import { addRoutes } from './../../src/routes/routes'
+import { connectionToDB } from '../../src/db/mongo-db'
+import request from 'supertest'
+const getRequest = () => {
+    return request(app)
+}
+addRoutes(app)
 
 describe('security test', () => {
     let mongoServer: MongoMemoryServer;
@@ -39,7 +47,8 @@ describe('security test', () => {
         const ip = 'ip'  
 
         const result = await loginUserCase(input, title, ip)
-        const session = await req.get(SETTINGS.PATH.SECURITY)
+        const session = await getRequest().get(`${SETTINGS.PATH.SECURITY}/`)
+        .set('Cookie', [`refreshToken=${result.data.refreshToken}`])
         .set('192.168.1.1', '/test')
         .expect(200)
     })

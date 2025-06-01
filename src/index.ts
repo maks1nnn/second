@@ -14,7 +14,7 @@ const start = async () => {
     }
 
 app.listen(SETTINGS.PORT, async () => {
-    console.log(' ...server started')
+    console.log('...server started')
 })
 }
 app.set('trust proxy', true);

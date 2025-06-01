@@ -9,51 +9,58 @@ import { DeleteSessionByDeviceIdType } from "../types/ipDbTypes";
 
 export const securityService = {
 
-    async getAllSessions(id:string ){
-       // const decoded = await jwtServise.decodeToken(refreshToken)
-        const session = await ipControlRepository.findAllSessionByUserId(id)
-         if(session === null){
-            return{
-                status: ResultStatus.Unauthorized,
-                extensions: [{field:"code", message: 'not fount user session'}],
-                data:null,
-            }
-         }
+    async getAllSessions(reftoken: string) {
+        const decoded = await jwtServise.decodeToken(reftoken)
 
-         return {
+        if (!decoded) {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null
+            }
+        }
+        const session = await ipControlRepository.findAllSessionByUserId(decoded.id)
+        if (session === null) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{ field: "code", message: 'not fount user session' }],
+                data: null,
+            }
+        }
+
+        return {
             status: ResultStatus.Success,
             data: session
-         }
+        }
     },
 
-    async deleteUserSession(inputData: DeleteSessionByDeviceIdType){
+    async deleteUserSession(inputData: DeleteSessionByDeviceIdType) {
         const result = await ipControlRepository.deleteSessionByDeviceId(inputData)
-        if (result === null){
-            return{
+        if (result === null) {
+            return {
                 status: ResultStatus.Unauthorized,
-                extensions: [{field:"code", message: 'not found device'}],
+                extensions: [{ field: "code", message: 'not found device' }],
                 data: null,
             }
         }
 
-        return{
+        return {
             status: ResultStatus.Success,
             data: result
         }
     },
 
-    async deleteAllSessions(userId:string){
+    async deleteAllSessions(userId: string) {
         const result = await ipControlRepository.deleteAllSesionsByUserId(userId)
-        if (result === null){
-            return{
+        if (result === null) {
+            return {
                 status: ResultStatus.Unauthorized,
-                extensions: [{field:"code", message: 'not found device'}],
+                extensions: [{ field: "code", message: 'not found device' }],
                 data: null,
             }
-        }
-        return{
+        }else{
+        return {
             status: ResultStatus.Success,
             data: result
-        }
+        }}
     }
 }

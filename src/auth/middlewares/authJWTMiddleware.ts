@@ -8,12 +8,12 @@ import { userServise } from "../../users/service/user-servise"
 
 export const authJWTMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-        res.status(401).send()
+        res.status(401).send('govno')
         return
     }
     const teg = req.headers.authorization.split(' ')[0]
     if (teg !== 'Bearer') {
-        res.status(401).send()
+        res.status(401).send('parasha')
         return
     }
 
@@ -27,7 +27,6 @@ export const authJWTMiddleware = async (req: Request, res: Response, next: NextF
         
         if (user !== undefined && user !== null) {
             req.userId = user.id
-            console.log('Confirm: ' + user)
             next()
         }
 
@@ -35,6 +34,6 @@ export const authJWTMiddleware = async (req: Request, res: Response, next: NextF
         res.status(401).send('mistake verify')
         return
     }
-    // return res.status(401).send("hernya") 
+    
 
 }

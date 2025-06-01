@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongodb'
-import { jwtCollection } from '../db/mongo-db'
+/*import { ObjectId } from 'mongodb'
+import { jwtCollection } from '../db/mongo-db'*/
 
 /*export const jwtRepository = {
     async createJwt(inputData: any) {
@@ -32,7 +32,7 @@ import { jwtCollection } from '../db/mongo-db'
 }*/
  
 
-export const jwtRepository = {
+/*export const jwtRepository = {
     async saveRefreshToken(userId: string, refreshToken: string): Promise<boolean> {
         try {
             // Удаляем все старые токены пользователя
@@ -107,4 +107,4 @@ export const jwtRepository = {
             return false
         }
     },
-}
+}*/

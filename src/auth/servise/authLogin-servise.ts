@@ -11,11 +11,10 @@ import { InputAuthType } from "../types/auth-types";
 import { jwtServise } from "../../domain/jwt-servise";
 import { registrationEmailTemplate } from "../../common/email-templates/registrationEmailTemplate";
 import { InferIdType, ObjectId } from "mongodb";
-import { Request, Response } from "express"
+import e, { Request, Response } from "express"
 import jwt from "jsonwebtoken";
-import { jwtRepository } from "../../repositories/jwt-repositories";
+//import { jwtRepository } from "../../repositories/jwt-repositories";
 import { Console } from "console";
-import { v4 as uuidv4 } from 'uuid';
 import { ipControlRepository } from "../../security/repository/ipRepository";
 import { decode } from "punycode";
 
@@ -28,8 +27,8 @@ export const loginServise = {
         try {
 
             const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
-            if (user !== null) { console.log("userLOGIN: " + user.login) }
-
+          
+             
             if (user === null || !(await bcryptServise.checkPassword(input.password, user.passwordHash))) {
                 return {
                     status: ResultStatus.BadRequest,
@@ -40,14 +39,14 @@ export const loginServise = {
 
             const jwtPayload = {
                 id: user._id.toString(),
-                deviceId: uuidv4()
+                deviceId: randomUUID()
             }
 
             const token: string = await jwtServise.createToken(jwtPayload)
             const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
 
             const decoded = await jwtServise.decodeToken(refreshToken)
-
+             
             const dataForSession = {
                 ip: ip,
                 title: title,
@@ -59,8 +58,7 @@ export const loginServise = {
             }
 
             const makeSession = await ipControlRepository.saveIp(dataForSession)
-            const session = await ipControlRepository.findAllSessionByUserId(jwtPayload.id)
-            console.log(session)
+             
             return {
                 status: ResultStatus.Success,
                 data: { token, refreshToken }
@@ -162,7 +160,7 @@ export const loginServise = {
             const token: string = await jwtServise.createToken(jwtPayload)
             const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
             const decoded = await jwtServise.decodeToken(refreshToken)
-            const remove = await jwtRepository.saveRefreshToken(payload, refreshToken)
+            //const remove = await jwtRepository.saveRefreshToken(payload, refreshToken)
 
             const updateData = {
                 id: jwtPayload.id,
