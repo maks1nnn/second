@@ -9,20 +9,23 @@ export const getDeviceController = async (req: Request, res: Response) => {
      
     try {
         if (req.cookies.refreshToken === null) {
-            res.status(401).send('Govno')
-            return}
+            return res.status(401).send('Govno')
+            }
 
             const result = await securityService.getAllSessions(req.cookies.refreshToken)
 
             if (result.status === ResultStatus.Unauthorized) {
-                res.status(401).send('gecnj')
-                return
+                return res.status(401).send('gecnj')
+                
             }
             if (result.status === ResultStatus.Success) {
-                res.status(200).send(result.data)
+                return res.status(200).send(result.data)
+            }
+            if (result.status === ResultStatus.BadRequest) {
+                return res.status(401).send(result.data)
             }
         }catch (err) {
             console.log(err)
-            res.status(502).send('some wrong')
+            return res.status(502).send('some wrong')
         }
     }

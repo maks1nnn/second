@@ -3,36 +3,48 @@ import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { securityService } from "../servise/security-servise";
 import { jwtServise } from "../../domain/jwt-servise";
 
-export const deleteUserSessionController = async(req:Request,res:Response) => {
-    try{
-        //console.log('heeeeelp' + req.params.deviceId)
-        if( !req.params.deviceId){
-            res.status(204).send()
-            return
+export const deleteUserSessionController = async (req: Request, res: Response) => {
+    try {
+        if (!req.params.deviceId) {
+            return res.status(404).send();
         }
-        
-        
-        const decoded = await jwtServise.decodeToken(req.cookies.refreshToken)
-        if(!decoded){
-            return res.status(404).send()
-            
+        if (!req.cookies.refreshToken) {
+            return res.status(401).send("Refresh token missing");
         }
+
+        const decoded = await jwtServise.decodeToken(req.cookies.refreshToken);
+        if (!decoded) {
+            return res.status(401).send("Invalid token");
+        }
+
+        
 
         const inputData = {
             id: decoded.id,
-            deviceId: req.params.deviceId}
+            deviceId: req.params.deviceId
+        };
 
-        const result = await securityService.deleteUserSession(inputData)
-
-        if(result.status === ResultStatus.Unauthorized){
-            console.log('ebanina')
-            return res.status(401).send()
-            
+        const result = await securityService.deleteUserSession(inputData);
+        if (!result) {
+            return res.status(404).send("Session not found");
         }
 
-        return res.status(204)
-    }catch(err){
-        console.log(err)
-        res.status(502).send()
+        if (result.status === ResultStatus.Unauthorized) {
+            return res.status(404).send("device not found"); // 403 Forbidden
+        }
+        if ( req.params.deviceId !== decoded.deviceId) {
+            return res.status(403).send("Not your session"); // 403 Forbidden
+        }
+
+        if (result.status === ResultStatus.Success) {
+            return res.status(204).send();
+        }
+
+        
+         return res.status(500).send("Unexpected result status");
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).send("Server error");
     }
-}
+};

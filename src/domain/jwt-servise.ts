@@ -32,15 +32,14 @@ export const jwtServise = {
     },
 
     async decodeToken(token: string): Promise<any> {
-        try {
-            return jwt.decode(token) as { id: string;deviceId:string; iat: number; exp: number } | null;;
-        } catch (e: unknown) {
-            console.error('Can not decode token', e);
-            return null;
-        }
+         
+           const result = jwt.decode(token) as { id: string;deviceId:string; iat: number; exp: number } | null;;
+            if( result){
+                return result
+            }
     },
 
-    async verifyToken(token: string): Promise<any> {
+    async verifyToken(token: string)  {
         try {
             const result: any = jwt.verify(token, SETTINGS.AC_SECRET);
             console.log(result + 'rrrrrrrrggggggglllllll')
@@ -50,15 +49,17 @@ export const jwtServise = {
             return null;
         }
     },
-    async verifyRefreshToken(token: string): Promise<any> {
-        try {
+    async verifyRefreshToken(token: string)  {
+         
             const result: any = jwt.verify(token, SETTINGS.REF_SECRET);
             console.log('verifYY  ' + result + 'AND' + result.data.userId)
-            return result.data
-        } catch (error) {
-            console.error("Token verify some error");
-            return null;
-        }
+            if( result !== null){
+                return result
+            }else{
+                return null
+            }
+            
+         
     }
 }
 

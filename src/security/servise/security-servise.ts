@@ -41,12 +41,14 @@ export const securityService = {
                 extensions: [{ field: "code", message: 'not found device' }],
                 data: null,
             }
+        }else {
+            return {
+                status: ResultStatus.Success,
+                
+            }
         }
 
-        return {
-            status: ResultStatus.Success,
-            data: result
-        }
+        
     },
 
     async deleteAllSessions(userId: string) {

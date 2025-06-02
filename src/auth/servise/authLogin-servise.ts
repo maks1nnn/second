@@ -117,6 +117,7 @@ export const loginServise = {
         try {
 
             const payload = await jwtServise.verifyRefreshToken(refToken);
+            console.log(payload + ' see you soon')
             if (!payload) {
                 return {
                     status: ResultStatus.Unauthorized,
