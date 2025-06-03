@@ -51,8 +51,8 @@ export const securityService = {
         
     },
 
-    async deleteAllSessions(userId: string) {
-        const result = await ipControlRepository.deleteAllSesionsByUserId(userId)
+    async deleteAllSessions(userId: string, deviceId: string) {
+        const result = await ipControlRepository.deleteAllSessionsByUserId(userId, deviceId)
         if (result === null) {
             return {
                 status: ResultStatus.Unauthorized,

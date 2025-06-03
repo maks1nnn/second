@@ -56,9 +56,12 @@ export const ipControlRepository = {
         }
     },
 
-    async deleteAllSesionsByUserId(userId: string) {
-        const result = await ipControlCollection.deleteMany({ user_id: userId })
-        return result.deletedCount
+    async deleteAllSessionsByUserId(userId: string, deviceId: string) {
+        const result = await ipControlCollection.deleteMany({ 
+            user_id: userId,
+            deviceId: { $ne: deviceId } // Удаляем все, где deviceId НЕ равен переданному
+        });
+        return result.deletedCount;
     },
 
     async deleteSessionByDeviceId(inputData: DeleteSessionByDeviceIdType) {

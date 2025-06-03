@@ -18,7 +18,7 @@ export const deleteAllDevicesController = async (req: Request, res: Response) =>
 
         }
 
-        const result = await securityService.deleteAllSessions(decoded.id)
+        const result = await securityService.deleteAllSessions(decoded.id, decoded.deviceId)
 
         if (result.status === ResultStatus.Unauthorized) {
             return res.status(401).send()
