@@ -128,6 +128,7 @@ export const loginServise = {
 
             //const safeToken = await jwtRepository.findRefreshToken(payload)
             const session = await ipControlRepository.findSessionByIdAndDeviceId(payload)
+            console.log(session + 'pokemon')
             if (session === null) {
                 return {
                     status: ResultStatus.Unauthorized,
