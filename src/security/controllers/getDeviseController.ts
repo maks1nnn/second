@@ -24,6 +24,8 @@ export const getDeviceController = async (req: Request, res: Response) => {
             if (result.status === ResultStatus.BadRequest) {
                 return res.status(401).send(result.data)
             }
+            return res.status(500).send("Unexpected result status");
+
         }catch (err) {
             console.log(err)
             return res.status(502).send('some wrong')

@@ -33,7 +33,7 @@ export const jwtServise = {
 
     async decodeToken(token: string): Promise<any> {
          
-           const result = jwt.decode(token) as { id: string;deviceId:string; iat: number; exp: number } | null;;
+           const result = jwt.decode(token) as { id: string;deviceId:string; iat: number; exp: number } | null;
             if( result){
                 return result
             }
@@ -42,7 +42,7 @@ export const jwtServise = {
     async verifyToken(token: string)  {
         try {
             const result: any = jwt.verify(token, SETTINGS.AC_SECRET);
-            console.log(result + 'rrrrrrrrggggggglllllll')
+            console.log(result + 'rrrrrrrrgggggggllllll')
             return result.userId
         } catch (error) {
             console.error("Token verify some error");
@@ -51,8 +51,9 @@ export const jwtServise = {
     },
     async verifyRefreshToken(token: string)  {
          
-            const result: any = jwt.verify(token, SETTINGS.REF_SECRET);
-            console.log('verifYY  ' + result + 'AND' + result.data.userId)
+            const result: any = jwt.verify(token, SETTINGS.REF_SECRET) as { 
+                id: string;deviceId:string; iat: number; exp: number } | null;
+            console.log('verifYY  ' + result  )
             if( result !== null){
                 return result
             }else{
