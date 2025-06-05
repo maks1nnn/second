@@ -5,7 +5,7 @@ import { InputRateType } from '../common/types/rateTypes'
 export const rateRepository = {
     async saveUrlLimit(inputData: InputRateType){
     try{
-        console.log(inputData)
+         
         const insertInfo = await rateCollection.insertOne(inputData)
         return insertInfo.insertedId
     }catch(err){
