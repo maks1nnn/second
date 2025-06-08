@@ -30,7 +30,7 @@ describe('USER_TESTS', () => {
         const authHeader = `Basic ${Buffer.from('admin:qwerty').toString('base64')}`;
 
         const newUser = await (req
-        .post(SETTINGS.PATH.USERS)
+        .post(`${SETTINGS.PATH.USERS}/`)
         .set('Authorization', authHeader)
         .send(userDto)
         .expect(201))

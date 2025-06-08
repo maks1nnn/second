@@ -5,7 +5,7 @@ export const ADMIN_AUTH = 'admin:qwerty' // get from SETTINGS
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const auth = req.headers['authorization'] as string // 'Basic xxxx'
-    console.log(auth)
+    //console.log(auth)
     if (!auth) {
         res
             .status(401)

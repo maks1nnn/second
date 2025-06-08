@@ -2,11 +2,12 @@ import { Request,Response } from "express";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { securityService } from "../servise/security-servise";
 import { jwtServise } from "../../domain/jwt-servise";
+import { ipControlRepository } from "../repository/ipRepository";
 
 export const deleteUserSessionController = async (req: Request, res: Response) => {
     try {
         if (!req.params.deviceId) {
-            return res.status(404).send();
+            return res.status(404).send('deviceId not found');
         }
         if (!req.cookies.refreshToken) {
             return res.status(401).send("Refresh token missing");
@@ -16,7 +17,16 @@ export const deleteUserSessionController = async (req: Request, res: Response) =
         if (!decoded) {
             return res.status(401).send("Invalid token");
         }
-
+        
+        const checkDevice = await ipControlRepository.findSessionByDeviceId(  req.params.deviceId)
+        
+        if( checkDevice === null){
+            return res.status(404).send('deviceId not found')
+        }
+        
+        if ( req.params.deviceId !== decoded.deviceId) {
+            return res.status(403).send("Not your session"); // 403 Forbidden
+        }
         
 
         const inputData = {
@@ -28,13 +38,13 @@ export const deleteUserSessionController = async (req: Request, res: Response) =
         if (!result) {
             return res.status(404).send("Session not found");
         }
-
+        
         if (result.status === ResultStatus.Unauthorized) {
             return res.status(404).send("device not found"); // 403 Forbidden
         }
-        if ( req.params.deviceId !== decoded.deviceId) {
-            return res.status(403).send("Not your session"); // 403 Forbidden
-        }
+
+       
+
 
         if (result.status === ResultStatus.Success) {
             return res.status(204).send();

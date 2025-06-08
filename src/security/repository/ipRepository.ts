@@ -87,10 +87,10 @@ export const ipControlRepository = {
                     iat: inputData.iat,
                 }
             },
-            {
+            /*{
                 returnDocument: 'after', // Возвращаем обновленный документ
                 upsert: false // Не создавать новую запись, если не найдена
-            }
+            }*/
 
         );
         if (result !== null) { return result.modifiedCount === 1; }else {
@@ -98,5 +98,19 @@ export const ipControlRepository = {
         }
 
 
-    }
+    },
+    async findSessionByDeviceId(deviceId: string) {
+         
+        const session = await ipControlCollection.findOne({deviceId:  deviceId})
+        if (session) {
+
+            return {
+                ip: session.ip,
+                title: session.title,
+                lastActiveDate: session.lastActiveDate,
+                deviceId: session.deviceId,
+                iat: session.iat,
+            }
+        } else { return null }
+    },
 }

@@ -27,16 +27,27 @@ export const loginServise = {
         try {
 
             const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
-          
-             
-            if (user === null || !(await bcryptServise.checkPassword(input.password, user.passwordHash))) {
+
+
+            if (user === null) {
                 return {
                     status: ResultStatus.BadRequest,
                     extensions: [{ field: "code", message: 'Failed to send confirmation email pasword' }],
                     data: null
                 }
-            }
 
+            }
+            const checkPassword = await bcryptServise.checkPassword(input.password, user.passwordHash)
+            
+            if (!checkPassword) {
+                return {
+                    status: ResultStatus.BadRequest,
+                    extensions: [{ field: "code", message: 'Failed to send confirmation email pasword' }],
+                    data: null
+                }
+
+            }
+            console.log(user._id + 'rrrrrrrrrrr')
             const jwtPayload = {
                 id: user._id.toString(),
                 deviceId: randomUUID()
@@ -46,7 +57,7 @@ export const loginServise = {
             const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
 
             const decoded = await jwtServise.decodeToken(refreshToken)
-             
+
             const dataForSession = {
                 ip: ip,
                 title: title,
@@ -58,7 +69,7 @@ export const loginServise = {
             }
 
             const makeSession = await ipControlRepository.saveIp(dataForSession)
-             
+
             return {
                 status: ResultStatus.Success,
                 data: { token, refreshToken }
@@ -170,7 +181,7 @@ export const loginServise = {
                 iat: decoded.iat
             }
             const update = await ipControlRepository.refreshSession(updateData)
-            if (update) {
+            if (update === null) {
                 return {
                     status: ResultStatus.Unauthorized,
                     errorMessage: "User not found",

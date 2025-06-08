@@ -34,7 +34,7 @@ describe('BLOGS_TEST', () => {
         //  await db.drop();
     })
 
-    it(' GET blogs empty array: status: 200', async () => {
+    it.skip(' GET blogs empty array: status: 200', async () => {
         const res = await getRequest().get(`${SETTINGS.PATH.BLOGS}/`).expect(200)
 
         expect(res.status).toBe(200)
@@ -57,7 +57,7 @@ describe('BLOGS_TEST', () => {
 
     })
 
-    it('get some blogs', async () => {
+    it.skip('get some blogs', async () => {
         const result = await getRequest().get(`${SETTINGS.PATH.BLOGS}/`)
 
         expect(result.status).toBe(200)

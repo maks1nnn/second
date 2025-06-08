@@ -3,7 +3,7 @@ import { loginServise } from "../servise/authLogin-servise"
 import { ResultStatus } from "../../input-uotput-types/resultCode"
 export const refreshTokenController = async (req: Request, res: Response) => {
     try {
-        console.log('TokenQQQ', req.cookies.refreshToken)
+        //console.log('TokenQQQ', req.cookies.refreshToken)
         const result = await loginServise.checkAndUpdateRefToken(req.cookies.refreshToken)
         if (result.status === ResultStatus.Unauthorized) {
             res.status(401).send(result.errorMessage)

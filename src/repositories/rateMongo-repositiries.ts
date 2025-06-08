@@ -23,7 +23,7 @@ export const rateRepository = {
         url: url,
          date: {$gte: date}
     });
-    console.log(result )
+    //console.log(result )
       
     return result  
     }

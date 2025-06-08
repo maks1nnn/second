@@ -48,7 +48,7 @@ describe('security test', () => {
 
         const result = await loginUserCase(input, title, ip)
         const session = await getRequest().get(`${SETTINGS.PATH.SECURITY}/`)
-        .set('Cookie', [`refreshToken=${result.data.refreshToken}`])
+        .set('Cookie',  `refreshToken=${result.data.refreshToken}` )
         .set('192.168.1.1', '/test')
         .expect(200)
     })

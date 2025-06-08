@@ -52,7 +52,7 @@ export const jwtServise = {
     async verifyRefreshToken(token: string)  {
          
             const result: any = jwt.verify(token, SETTINGS.REF_SECRET) as { 
-                id: string;deviceId:string; iat: number; exp: number } | null;
+                id: string; deviceId:string; iat: number; exp: number } | null;
             
             if( result !== null){
                 return result
