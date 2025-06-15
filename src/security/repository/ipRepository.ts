@@ -65,10 +65,11 @@ export const ipControlRepository = {
     },
 
     async deleteSessionByDeviceId(inputData: DeleteSessionByDeviceIdType) {
+       
         const result = await ipControlCollection.deleteOne({
             $and: [
                 { user_id: inputData.id },
-                { deviseId: inputData.deviceId }
+                { deviceId: inputData.deviceId }
             ]
         })
         if(result.deletedCount !== 1){
@@ -77,25 +78,29 @@ export const ipControlRepository = {
             }
     },
     async refreshSession(inputData: RefreshSessionDataType) {
+                
         const result = await ipControlCollection.findOneAndUpdate(
             {
-                id: inputData.id,
+                user_id: inputData.id,
                 deviceId: inputData.deviceId
             },
             {
                 $set: {
                     iat: inputData.iat,
+                    lastActiveDate: new Date(),
                 }
             },
-            /*{
+             {
                 returnDocument: 'after', // Возвращаем обновленный документ
                 upsert: false // Не создавать новую запись, если не найдена
-            }*/
+            } 
 
         );
-        if (result !== null) { return result.modifiedCount === 1; }else {
-            return null
-        }
+        
+        if(result){
+        if (result.matchedCount === 0 ) { return null }else {
+            return result.modifiedCount
+        }}else{return null}
 
 
     },

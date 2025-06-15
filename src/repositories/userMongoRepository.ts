@@ -10,22 +10,16 @@ import { UserValidationRules } from "../users/types/user-types";
 export const userRepository = {
 
     async createUser(inputData: any) {
-        try {
+         
             const insertInfo = await userCollection.insertOne(inputData)
-            return insertInfo.insertedId; // Возвращаем ID созданного пользователя
-        } catch (err) {
-            console.log(err)
-            return false; // или обработайте ошибку соответствующим образом
-        }
+            if (insertInfo) {return insertInfo.insertedId; // Возвращаем ID созданного пользователя
+        } else { return null }
     },
 
     async findUser(id: ObjectId) {
         const user = await userCollection.findOne({ _id: id })
         if (user) {
             return user
-
-
-
         } else { return null }
     },
 
@@ -51,7 +45,7 @@ export const userRepository = {
     },
 
     async findUserByConfirmationCode(code: string) {
-        
+
         const user = await userCollection.findOne({ "emailConfirmation.confirmationCode": code })
 
         if (user) {

@@ -10,29 +10,29 @@ export const loginController = async (req: Request, res: Response) => {
     try {
         
         const title = req.headers['user-agent'] || 'Unknown Device'
+        
         const ip = req.ip || 'djondow'
 
         
 
         const result = await loginServise.loginUser(req.body, title, ip)
         if (result.status === ResultStatus.BadRequest) {
-            res.status(401).send({
+            return res.status(401).send({
                 errorsMessages: result.extensions
             })
-            return
+            
 
         }
         if (result.status === ResultStatus.Forbidden) {
-            res.status(403).send({
+            return res.status(403).send({
                 errorsMessages: result.extensions
-
             })
-            return
+             
         }
         if (result.status === ResultStatus.Success) {
             const { token, refreshToken } = result.data!;
             //console.log(result.data)
-            res
+            return res
                 .cookie('refreshToken', refreshToken, {
                     httpOnly: true, // Защищает от XSS атак
                     secure: true,
@@ -42,8 +42,10 @@ export const loginController = async (req: Request, res: Response) => {
                     accessToken: token
                 })
         }
+
+        return res.status(500).send("Unexpected result status");
     } catch (err) {
         console.error(err)
-        res.status(502).send()
+       return res.status(502).send()
     }
 }

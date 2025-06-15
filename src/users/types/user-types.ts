@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb"
 
 
 export const UserValidationRules = {
@@ -17,4 +18,20 @@ export type InputUserType = {
 
 export type IdType = {
     id: string
+}
+
+export class UserDbType {
+    constructor(public _id: ObjectId,
+                public login: string,
+                public enmail: string,
+                public passwordHash: string,
+                public createAt: string,
+                public emailConfirmation: {
+                    confirmationCode: string,
+                    expirationDate: Date,
+                    isConfirmed: boolean,
+                }
+                 ){
+
+                }
 }

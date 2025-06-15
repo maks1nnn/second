@@ -54,10 +54,10 @@ export const jwtServise = {
             const result: any = jwt.verify(token, SETTINGS.REF_SECRET) as { 
                 id: string; deviceId:string; iat: number; exp: number } | null;
             
-            if( result !== null){
-                return result
-            }else{
+            if( !result  ){
                 return null
+            }else{
+                return result
             }
             
          

@@ -13,20 +13,17 @@ export const deleteUserSessionController = async (req: Request, res: Response) =
             return res.status(401).send("Refresh token missing");
         }
 
-        const decoded = await jwtServise.decodeToken(req.cookies.refreshToken);
+        const decoded = await jwtServise.verifyRefreshToken(req.cookies.refreshToken);
         if (!decoded) {
             return res.status(401).send("Invalid token");
         }
         
-        const checkDevice = await ipControlRepository.findSessionByDeviceId(  req.params.deviceId)
+        const checkDevice = await ipControlRepository.findSessionByDeviceId(req.params.deviceId)
         
         if( checkDevice === null){
             return res.status(404).send('deviceId not found')
         }
         
-        if ( req.params.deviceId !== decoded.deviceId) {
-            return res.status(403).send("Not your session"); // 403 Forbidden
-        }
         
 
         const inputData = {
@@ -36,11 +33,11 @@ export const deleteUserSessionController = async (req: Request, res: Response) =
 
         const result = await securityService.deleteUserSession(inputData);
         if (!result) {
-            return res.status(404).send("Session not found");
+            return res.status(403).send("Session not found");
         }
         
         if (result.status === ResultStatus.Unauthorized) {
-            return res.status(404).send("device not found"); // 403 Forbidden
+            return res.status(403).send("device not found"); // 403 Forbidden
         }
 
        
