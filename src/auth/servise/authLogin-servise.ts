@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { add } from "date-fns";
 
 import { InputUserType, IdType, UserValidationRules } from "../../users/types/user-types";
-import { userRepository } from "../../repositories/userMongoRepository";
+import { userRepository } from "../../users/repository/userMongoRepository";
 import { bcryptServise } from "../../domain/hashServise";
 import { nodemailerService } from "../../common/adapters/nodemailer-adapter";
 import { Result } from "../../comments/types/comment-types";

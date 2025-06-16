@@ -1,5 +1,5 @@
 import { Collection } from "mongodb"
-import { userCollection } from "../db/mongo-db"
+import { userCollection } from "../../db/mongo-db"
 
 
 

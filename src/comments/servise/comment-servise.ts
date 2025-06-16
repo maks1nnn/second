@@ -1,6 +1,6 @@
 import { commentRepository } from "../../repositories/commentMongoRepositories"
 import { ObjectId } from 'mongodb'
-import { userRepository } from "../../repositories/userMongoRepository"
+import { userRepository } from "../../users/repository/userMongoRepository"
 import { InputCommentType, Result } from "../types/comment-types"
 import { ResultStatus } from "../../input-uotput-types/resultCode"
 

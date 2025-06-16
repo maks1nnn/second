@@ -1,19 +1,24 @@
 import { ObjectId } from "mongodb";
-import { userRepository } from "../../repositories/userMongoRepository"
+import {   UserRepository } from "../repository/userMongoRepository"
 import { bcryptServise } from "../../domain/hashServise";
 import { randomUUID } from "crypto";
 import { add } from "date-fns";
 import { loginController } from "../../auth/controllers/authLoginController";
 import { UserDBType, UserOutputForMe } from "../../db/user-db-types";
 import { UserDbType } from "../types/user-types";
+import {injectable,inject} from 'inversify'
 
 
 
 
 
 
-
-export class UserServise  {
+@injectable()
+ export class UserServise  {
+     
+    constructor(@inject(UserRepository)protected userRepository: UserRepository){
+         
+    }
     async createNewUser(body: any) {
         const passwordHash = await bcryptServise.generateHash(body.password)
 
@@ -48,9 +53,9 @@ export class UserServise  {
             isConfirmed: false,
         } )
 
-        const userId = await userRepository.createUser(inputData)
+        const userId = await this.userRepository.createUser(inputData)
         if (userId) {
-            const newUser = await userRepository.findUser(userId)
+            const newUser = await this.userRepository.findUser(userId)
             return this.mapToOutput(newUser as UserDBType);
         } else {
             return false; // или обработайте ошибку соответствующим образом
@@ -58,11 +63,11 @@ export class UserServise  {
     }
 
     async deleteUser(id: ObjectId) {
-        return userRepository.deleteUser(id)
+        return this.userRepository.deleteUser(id)
     }
 
     async findById(id: ObjectId) {
-        const user = await userRepository.findUser(id)
+        const user = await this.userRepository.findUser(id)
         if (user !== null) {
             return this.mapToOutput(user as UserDBType)
         } else { return null }
@@ -80,7 +85,7 @@ export class UserServise  {
     }
 
     async findByIdForMe(id: ObjectId) {
-        const user = await userRepository.findUser(id)
+        const user = await this.userRepository.findUser(id)
         if (user !== null) {
             return this.mapToOutputForMe(user as UserDBType)
         } else { return null }
@@ -102,7 +107,7 @@ export class UserServise  {
 
 }
 
-export const userServise = new UserServise()
+//export const userServise = new UserServise()
 
 
 
