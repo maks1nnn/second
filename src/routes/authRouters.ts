@@ -11,6 +11,8 @@ import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResult
 import { logoutController } from "../auth/controllers/logoutController";
 import { refreshTokenController } from "../auth/controllers/refreshTokenController";
 import { checkRateLimit } from "../middlewares/checkRateLimit";
+import { newPasswordController } from "../auth/controllers/newPassswordController";
+import { passwordRecoveryController } from "../auth/controllers/passwordRecoveryController";
 
 export const authRouter = Router()
 
@@ -21,4 +23,6 @@ authRouter.post('/registration',...userValidationMiddlevare,checkRateLimit, inpu
 authRouter.post('/registration-email-resending',checkRateLimit, registrationEmailResendingController)
 authRouter.post('/refresh-token',  refreshTokenController)
 authRouter.post('/logout',  logoutController)
+authRouter.post('/pasword-recovery', passwordRecoveryController )
+authRouter.post('/new-password', newPasswordController )
  
