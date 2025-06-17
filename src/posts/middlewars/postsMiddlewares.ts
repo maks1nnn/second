@@ -1,7 +1,7 @@
 import {body} from "express-validator"
 import { ObjectId } from "mongodb"
 import {PostValidatorRules} from '../types/post-types'
-import {blogRepository} from '../../repositories/blogMongo-repositories'
+import {blogRepository} from '../../blog/repository/blogMongo-repositories'
 
 
 export const postValidationMiddlewares =[

@@ -1,6 +1,6 @@
 import { ObjectId, SortDirection } from "mongodb"
-import { blogCollection, postCollection } from "../db/mongo-db"
-import { BlogDBType } from "../db/blog-db-type"
+import { blogCollection, postCollection } from "../../db/mongo-db"
+import { BlogDBType } from "../../db/blog-db-type"
 
 export const queryBlogRepository = {
 

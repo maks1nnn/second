@@ -1,6 +1,6 @@
 import { ObjectId, SortDirection } from "mongodb"
-import { postCollection } from "../db/mongo-db"
-import { PostDBType } from "../db/post-db-type"
+import { postCollection } from "../../db/mongo-db"
+import { PostDBType } from "../../db/post-db-type"
 
 export const queryPostRepository = {
 

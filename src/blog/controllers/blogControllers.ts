@@ -3,7 +3,7 @@ import { blogServise } from '../service/blog-servise'
 import { OutputErrorsType } from '../../input-uotput-types/output-errors-types'
 import { OutputBlogType, InputBlogType } from '../types/blog-types'
 import { ObjectId } from 'mongodb'
-import { queryBlogRepository } from '../../repositories/blogMongoQueryRepository'
+import { queryBlogRepository } from '../repository/blogMongoQueryRepository'
 import { InputPostInBlogType, OutputPostDBType, OutputPostPaginType } from '../../posts/types/post-types'
 import { postServise } from '../../posts/service/post-servise'
 

@@ -1,6 +1,6 @@
 
 import { ObjectId } from "mongodb";
-import { commentCollection } from "../db/mongo-db";
+import { commentCollection } from "../../db/mongo-db";
 
 
 export const queryCommentRepository = {

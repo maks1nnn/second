@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
-import { CommentDBType } from '../db/comment-db-types'
-import { commentCollection } from '../db/mongo-db'
-import { InputCommentType } from '../comments/types/comment-types';
+import { CommentDBType } from '../../db/comment-db-types'
+import { commentCollection } from '../../db/mongo-db'
+import { InputCommentType } from '../types/comment-types';
 
 
 export const commentRepository = {

@@ -1,13 +1,21 @@
-import { postRepository } from '../../repositories/postMongo-repositories'
-import { blogRepository } from '../../repositories/blogMongo-repositories'
+import { PostRepository } from '../repository/postMongo-repositories'
+import { blogRepository } from '../../blog/repository/blogMongo-repositories'
 import { InputPostInBlogType, InputPostType, OutputPostDBType } from '../types/post-types'
 import { PostDBType } from '../../db/post-db-type'
-//import {blogRepository} from '../repositories/blogs-repositories'
 import { ObjectId } from 'mongodb'
 import { BlogDBType } from '../../db/blog-db-type'
-import { queryPostRepository } from '../../repositories/postMongoQueryRepository'
+import { queryPostRepository } from '../repository/postMongoQueryRepository'
+import { injectable, inject } from 'inversify'
 
-export const postServise = {
+
+@injectable()
+export class PostServise   {
+
+    constructor(@inject(PostRepository)protected postRepository:PostRepository){
+
+    }
+    
+    
     async createPosts(body: InputPostType) {
         // Check if the associated blog exists
 
@@ -27,8 +35,8 @@ export const postServise = {
             createdAt: (new Date()).toISOString()
         };
 
-        return postRepository.createPosts(inputData) 
-    },
+        return this.postRepository.createPosts(inputData) 
+    }
 
     async createPostInBlog(body:InputPostInBlogType, blogId:string) {
         const blog = await blogRepository.findForOutput(new ObjectId(blogId));
@@ -47,34 +55,34 @@ export const postServise = {
             createdAt: (new Date()).toISOString()
         };
 
-        return postRepository.createPosts(inputData) 
-    },
+        return this.postRepository.createPosts(inputData) 
+    }
 
 
     async findPosts(id: ObjectId) {
-        return postRepository.findForOutput(id)
-    },
+        return this.postRepository.findForOutput(id)
+    }
 
     async getAllPostsBySort(query: any) {
         return queryPostRepository.getMany(query)
-    },
+    }
 
 
     async getAllPosts() {
-        return postRepository.getAllPosts()
+        return this.postRepository.getAllPosts()
 
-    },
+    }
 
 
     async updatePosts(id: ObjectId, body: InputPostType): Promise<boolean> {
-        return postRepository.updatePosts(id, body)
+        return this.postRepository.updatePosts(id, body)
 
 
 
-    },
+    }
 
 
     async deletePosts(id: ObjectId): Promise<boolean> {
-        return postRepository.deletePosts(id)
-    },
+        return this.postRepository.deletePosts(id)
+    }
 }

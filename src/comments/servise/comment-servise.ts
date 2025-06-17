@@ -1,4 +1,4 @@
-import { commentRepository } from "../../repositories/commentMongoRepositories"
+import { commentRepository } from "../repository/commentMongoRepositories"
 import { ObjectId } from 'mongodb'
 import { userRepository } from "../../users/repository/userMongoRepository"
 import { InputCommentType, Result } from "../types/comment-types"
