@@ -4,14 +4,15 @@ import { OutputErrorsType } from '../../input-uotput-types/output-errors-types'
 import { OutputPostDBType, InputPostType } from '../types/post-types'
 import { ObjectId } from 'mongodb'
 import { InputCommentType, OutputCommentType } from '../../comments/types/comment-types'
-import { commentService } from '../../comments/servise/comment-servise'
+import { CommentService } from '../../comments/servise/comment-servise'
 import { queryCommentRepository } from '../../comments/repository/commentMongoQueryRepositories'
 import { ResultStatus } from '../../input-uotput-types/resultCode'
 import { injectable, inject } from 'inversify'
 
 @injectable()
 export class PostControllers  {
-    constructor(@inject(PostServise)protected postServise: PostServise){
+    constructor(@inject(PostServise)protected postServise: PostServise,
+                @inject(CommentService)protected commentService:CommentService){
 
     }
 
@@ -78,12 +79,12 @@ export class PostControllers  {
             if (isPost === null) {
                 return res.status(404).end()  
             }
-            const createComment = await commentService.createComment(req.params.postId, req.body.content, req.userId)
+            const createComment = await this.commentService.createComment(req.params.postId, req.body.content, req.userId)
             if (req.userId === null ) {
               return  res.status(401).end()
             }
             if (createComment) {
-                const newComment = await commentService.getCommentById(createComment)
+                const newComment = await this.commentService.getCommentById(createComment)
                 if (newComment) {
                  return   res.status(201).json(newComment)
                 } else {

@@ -1,14 +1,20 @@
-import { commentRepository } from "../repository/commentMongoRepositories"
+import { CommentRepository } from "../repository/commentMongoRepositories"
 import { ObjectId } from 'mongodb'
-import { userRepository } from "../../users/repository/userMongoRepository"
+import { UserRepository } from "../../users/repository/userMongoRepository"
 import { InputCommentType, Result } from "../types/comment-types"
 import { ResultStatus } from "../../input-uotput-types/resultCode"
+import { injectable, inject } from "inversify"
 
 
-export const commentService = {
+@injectable()
+export class CommentService  {
+    constructor(@inject(CommentRepository)protected commentRepository:CommentRepository,
+                @inject(UserRepository)protected userRepository:UserRepository){
+
+    }
     async createComment(postId:string , content: string, userId :any)   {
         
-        const user = await userRepository.findUser(new ObjectId(userId))
+        const user = await this.userRepository.findUser(new ObjectId(userId))
         if(user !== null){
 
         const inputData = {
@@ -23,12 +29,12 @@ export const commentService = {
 
         }
 
-        const newComment = await commentRepository.createComment(inputData)
+        const newComment = await this.commentRepository.createComment(inputData)
         if (newComment !== null && newComment !== false){
             return newComment
         } else{
             return null}}else{return null}
-    },
+    }
 
     async updateComment(commentId: ObjectId , body: InputCommentType, userId: any):Promise<Result> {
        const isComment = await  this.getCommentById(commentId)
@@ -51,7 +57,7 @@ export const commentService = {
        
        
        
-        const update = await commentRepository.updateComment(commentId, body)
+        const update = await this.commentRepository.updateComment(commentId, body)
         if (update) {
             return {
                 status: ResultStatus.Success,
@@ -63,7 +69,7 @@ export const commentService = {
                 data: null
             }
         }
-    },
+    }
 
     async deleteComment(id: ObjectId,userId:string | null): Promise<Result> {
         const isComment = await  this.getCommentById(id)
@@ -84,7 +90,7 @@ export const commentService = {
        }  
 
 
-        const isDelete = await commentRepository.deleteComment(id)
+        const isDelete = await this.commentRepository.deleteComment(id)
         if (isDelete) {
             return {
                 status: ResultStatus.Success,
@@ -97,16 +103,16 @@ export const commentService = {
             }
         }
 
-    },
+    }
 
     async getCommentById(id: ObjectId ) {
-        const findComment = await commentRepository.findComment(id)
+        const findComment = await this.commentRepository.findComment(id)
         if (findComment !== null) {
             return findComment
         } else {
             return false
         }
-    },
+    }
 
 
 }

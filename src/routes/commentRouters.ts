@@ -1,10 +1,11 @@
 import {Router} from 'express'
-import { commentControllers } from '../comments/controllers/commentControllers'
+import { CommentControllers } from '../comments/controllers/commentControllers'
 import { authJWTMiddleware } from '../auth/middlewares/authJWTMiddleware'
 import { commentValidatorMiddlewares } from '../comments/middlewars/commentvalidateMiddleware'
 import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResultMiddlewares'
+import { container } from '../composition-root'
 
-
+const commentControllers = container.get( CommentControllers)
 export const commentRouter = Router()
 
 
