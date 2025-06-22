@@ -9,9 +9,9 @@ const commentControllers = container.get( CommentControllers)
 export const commentRouter = Router()
 
 
-commentRouter.put('/:commentId',authJWTMiddleware, commentValidatorMiddlewares, inputCheckErrorsMiddleware, commentControllers.updateCommentById)
-commentRouter.delete('/:commentId',authJWTMiddleware,  commentControllers.deleteCommentById)
-commentRouter.get('/:id',  commentControllers.getCommentById)
+commentRouter.put('/:commentId',authJWTMiddleware, commentValidatorMiddlewares, inputCheckErrorsMiddleware, commentControllers.updateCommentById.bind(commentControllers))
+commentRouter.delete('/:commentId',authJWTMiddleware,  commentControllers.deleteCommentById.bind(commentControllers))
+commentRouter.get('/:id',  commentControllers.getCommentById.bind(commentControllers))
 
 
 

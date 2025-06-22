@@ -1,20 +1,14 @@
 import { randomUUID } from "crypto";
 import { add } from "date-fns";
-import { UserDBType } from "../../db/user-db-types";
 import { InputUserType, IdType, UserValidationRules } from "../../users/types/user-types";
 import { userRepository } from "../../users/repository/userMongoRepository";
 import { bcryptServise } from "../../domain/hashServise";
 import { nodemailerService } from "../../common/adapters/nodemailer-adapter";
 import { Result } from "../../comments/types/comment-types";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
-import { InputAuthType } from "../types/auth-types";
-import { jwtServise } from "../../domain/jwt-servise";
 import { registrationEmailTemplate } from "../../common/email-templates/registrationEmailTemplate";
-import { InferIdType, ObjectId } from "mongodb";
-import { Request, Response } from "express"
-import jwt from "jsonwebtoken";
-//import { jwtRepository } from "../../repositories/jwt-repositories";
-import { Console } from "console";
+
+
 
 
 
