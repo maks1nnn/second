@@ -1,10 +1,16 @@
-import { blogRepository } from '../repository/blogMongo-repositories' 
+import { BlogRepository } from '../repository/blogMongo-repositories' 
 import { InputBlogType } from '../types/blog-types'
 import { BlogDBType } from '../../db/blog-db-type'
 import { ObjectId } from 'mongodb'
 import { queryBlogRepository } from '../repository/blogMongoQueryRepository'
+import { injectable, inject} from 'inversify'
 
-export const blogServise = {
+@injectable()
+export class BlogServise  {
+
+    constructor(@inject(BlogRepository)protected blogRepository: BlogRepository){
+        
+    }
     async createBlogs(body: InputBlogType) {
         const inputData = {
 
@@ -19,35 +25,35 @@ export const blogServise = {
         }
        const createBlog = await blogRepository.createBlogs(inputData)
        return createBlog;
-    },
+    }
 
     async findBlogById(id: ObjectId) {
        return  blogRepository.findForOutput(id)
        
-    },
+    }
 
     async findPostsByBlogId(query:any, blogId:string){
         return queryBlogRepository.findByBlogId(query,blogId)
-    },
+    }
     
 
     async getAllBlogs() {
        
         return blogRepository.getAllBlogs();
-    },
+    }
 
     async getAllBlogsBySort(query:any,/*blogId:string*/) {
        
         return queryBlogRepository.getMany(query,/*blogId*/)
-    },
+    }
 
 
     async updateBlogs(id: ObjectId, body: InputBlogType) {
        return blogRepository.updateBlogs(id,body)
-    },
+    }
 
     async deleteBlogs(id: ObjectId) {
 
        return blogRepository.deleteBlogs(id)
-    },
+    }
 }
