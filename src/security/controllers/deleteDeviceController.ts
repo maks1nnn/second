@@ -1,4 +1,4 @@
-import { Request,Response } from "express";
+/*import { Request,Response } from "express";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { securityService } from "../servise/security-servise";
 import { jwtServise } from "../../domain/jwt-servise";
@@ -54,4 +54,4 @@ export const deleteUserSessionController = async (req: Request, res: Response) =
         console.log(err);
         return res.status(500).send("Server error");
     }
-};
+};*/

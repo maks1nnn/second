@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+/*import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
-import { securityService } from "../servise/security-servise";
+import { SecurityService } from "../servise/security-servise";
 import { jwtServise } from "../../domain/jwt-servise";
+import {injectable, inject} from 'inversify'
 
-
+ 
 export const deleteAllDevicesController = async (req: Request, res: Response) => {
 
     try {
@@ -31,4 +32,4 @@ export const deleteAllDevicesController = async (req: Request, res: Response) =>
         console.log(err)
         return res.status(502).send()
     }
-}
+}*/

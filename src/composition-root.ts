@@ -9,6 +9,12 @@ import { PostControllers } from "./posts/controllers/postControllaers";
 import { CommentRepository } from "./comments/repository/commentMongoRepositories";
 import { CommentService } from "./comments/servise/comment-servise";
 import { CommentControllers } from "./comments/controllers/commentControllers";
+import { BlogRepository } from "./blog/repository/blogMongo-repositories";
+import { BlogServise } from "./blog/service/blog-servise";
+import { BlogControllers } from "./blog/controllers/blogControllers";
+import { IpControlRepository } from "./security/repository/ipRepository";
+import { SecurityService } from "./security/servise/security-servise";
+import { SecurityControllers } from "./security/controllers/securityControllers";
 
 /*const userRepository = new UserRepository()
 const userServise = new UserServise(userRepository)
@@ -27,3 +33,11 @@ container.bind(PostControllers).to(PostControllers)
 container.bind(CommentRepository).to(CommentRepository)
 container.bind(CommentService).to(CommentService)
 container.bind(CommentControllers).to(CommentControllers)
+
+container.bind(BlogRepository).to(BlogRepository)
+container.bind(BlogServise).to(BlogServise)
+container.bind(BlogControllers).to(BlogControllers)
+
+container.bind(IpControlRepository).to(IpControlRepository)
+container.bind(SecurityService).to(SecurityService)
+container.bind(SecurityControllers).to(SecurityControllers)

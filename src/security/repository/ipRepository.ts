@@ -2,10 +2,10 @@ import { ObjectId } from 'mongodb'
 import { isatty } from 'tty'
 import { ipControlCollection } from '../../db/mongo-db'
 import { DeleteSessionByDeviceIdType, FindSessionByDevice, InputIpType, RefreshSessionDataType, } from '../types/ipDbTypes'
-
-
-
-export const ipControlRepository = {
+import { injectable } from 'inversify'
+ 
+@injectable()
+export class IpControlRepository   {
 
     async saveIp(inputData: InputIpType) {
         // console.log(inputData+ "dddddaaaaaaaaataaaaaaaa")
@@ -16,7 +16,7 @@ export const ipControlRepository = {
             console.log(error)
             return null
         }
-    },
+    }
 
     async findSessionByIdAndDeviceId(inputData: FindSessionByDevice) {
         const query = {
@@ -36,7 +36,7 @@ export const ipControlRepository = {
                 iat: session.iat,
             }
         } else { return null }
-    },
+    }
 
     async findAllSessionByUserId(id: string) {
          
@@ -54,7 +54,7 @@ export const ipControlRepository = {
         } else {
             return null
         }
-    },
+    }
 
     async deleteAllSessionsByUserId(userId: string, deviceId: string) {
         const result = await ipControlCollection.deleteMany({ 
@@ -62,7 +62,7 @@ export const ipControlRepository = {
             deviceId: { $ne: deviceId } // Удаляем все, где deviceId НЕ равен переданному
         });
         return result.deletedCount;
-    },
+    }
 
     async deleteSessionByDeviceId(inputData: DeleteSessionByDeviceIdType) {
        
@@ -76,7 +76,7 @@ export const ipControlRepository = {
             return null}else{
                 return result.deletedCount
             }
-    },
+    }
     async refreshSession(inputData: RefreshSessionDataType) {
                 
         const result = await ipControlCollection.findOneAndUpdate(
@@ -103,7 +103,7 @@ export const ipControlRepository = {
         }}else{return null}
 
 
-    },
+    }
     async findSessionByDeviceId(deviceId: string) {
          
         const session = await ipControlCollection.findOne({deviceId:  deviceId})
@@ -117,5 +117,5 @@ export const ipControlRepository = {
                 iat: session.iat,
             }
         } else { return null }
-    },
+    }
 }

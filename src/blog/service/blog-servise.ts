@@ -9,7 +9,7 @@ import { injectable, inject} from 'inversify'
 export class BlogServise  {
 
     constructor(@inject(BlogRepository)protected blogRepository: BlogRepository){
-        
+
     }
     async createBlogs(body: InputBlogType) {
         const inputData = {
@@ -23,12 +23,12 @@ export class BlogServise  {
 
             //id: ( Date.now() + Math.random()).toString(),
         }
-       const createBlog = await blogRepository.createBlogs(inputData)
+       const createBlog = await this.blogRepository.createBlogs(inputData)
        return createBlog;
     }
 
     async findBlogById(id: ObjectId) {
-       return  blogRepository.findForOutput(id)
+       return  this.blogRepository.findForOutput(id)
        
     }
 
@@ -39,7 +39,7 @@ export class BlogServise  {
 
     async getAllBlogs() {
        
-        return blogRepository.getAllBlogs();
+        return this.blogRepository.getAllBlogs();
     }
 
     async getAllBlogsBySort(query:any,/*blogId:string*/) {
@@ -49,11 +49,11 @@ export class BlogServise  {
 
 
     async updateBlogs(id: ObjectId, body: InputBlogType) {
-       return blogRepository.updateBlogs(id,body)
+       return this.blogRepository.updateBlogs(id,body)
     }
 
     async deleteBlogs(id: ObjectId) {
 
-       return blogRepository.deleteBlogs(id)
+       return this.blogRepository.deleteBlogs(id)
     }
 }

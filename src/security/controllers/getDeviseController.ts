@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+/*import { Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { send } from "process";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
@@ -30,4 +30,4 @@ export const getDeviceController = async (req: Request, res: Response) => {
             console.log(err)
             return res.status(502).send('some wrong')
         }
-    }
+    }*/

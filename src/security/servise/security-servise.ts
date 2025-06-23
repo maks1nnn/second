@@ -3,11 +3,15 @@ import { ObjectId } from "mongodb";
 import { ipControlCollection } from "../../db/mongo-db";
 import { jwtServise } from "../../domain/jwt-servise";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
-import { ipControlRepository } from "../repository/ipRepository";
+import { IpControlRepository } from "../repository/ipRepository";
 import { DeleteSessionByDeviceIdType } from "../types/ipDbTypes";
+import {injectable, inject} from 'inversify'
 
+@injectable()
+export class SecurityService  {
+    constructor(@inject(IpControlRepository)protected ipControlRepository: IpControlRepository){
 
-export const securityService = {
+    }
 
     async getAllSessions(reftoken: string) {
         const decoded = await jwtServise.decodeToken(reftoken)
@@ -18,7 +22,7 @@ export const securityService = {
                 data: null
             }
         }
-        const session = await ipControlRepository.findAllSessionByUserId(decoded.id)
+        const session = await this.ipControlRepository.findAllSessionByUserId(decoded.id)
         if (session === null) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -31,10 +35,10 @@ export const securityService = {
             status: ResultStatus.Success,
             data: session
         }
-    },
+    }
 
     async deleteUserSession(inputData: DeleteSessionByDeviceIdType) {
-        const result = await ipControlRepository.deleteSessionByDeviceId(inputData)
+        const result = await this.ipControlRepository.deleteSessionByDeviceId(inputData)
         if (result === null) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -49,10 +53,10 @@ export const securityService = {
         }
 
         
-    },
+    }
 
     async deleteAllSessions(userId: string, deviceId: string) {
-        const result = await ipControlRepository.deleteAllSessionsByUserId(userId, deviceId)
+        const result = await this.ipControlRepository.deleteAllSessionsByUserId(userId, deviceId)
         if (result === null) {
             return {
                 status: ResultStatus.Unauthorized,

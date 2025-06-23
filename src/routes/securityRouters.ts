@@ -1,11 +1,10 @@
 import { Router } from "express";
-import { getDeviceController } from "../security/controllers/getDeviseController";
-import { deleteAllDevicesController } from "../security/controllers/deleteAllDeviceController";
-import { deleteUserSessionController } from "../security/controllers/deleteDeviceController";
-import { authJWTMiddleware } from "../auth/middlewares/authJWTMiddleware";
+import { container } from "../composition-root";
+import { SecurityControllers } from "../security/controllers/securityControllers";
 
+const securityControllers= container.get(SecurityControllers)
 export const securityRouter = Router()
 
-securityRouter.get('/devices',   getDeviceController)
-securityRouter.delete('/devices',  deleteAllDevicesController)
-securityRouter.delete('/devices/:deviceId',  deleteUserSessionController)
+securityRouter.get('/devices',   securityControllers.getDeviceController.bind(securityControllers) )
+securityRouter.delete('/devices',  securityControllers.deleteAllDevicesController.bind(securityControllers))
+securityRouter.delete('/devices/:deviceId',  securityControllers.deleteUserSessionController.bind(securityControllers))
