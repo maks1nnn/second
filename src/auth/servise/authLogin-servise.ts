@@ -1,31 +1,25 @@
 import { randomUUID } from "crypto";
-import { add } from "date-fns";
-
-import { InputUserType, IdType, UserValidationRules } from "../../users/types/user-types";
-import { userRepository } from "../../users/repository/userMongoRepository";
+import { IdType } from "../../users/types/user-types";
+import { UserRepository, userRepository } from "../../users/repository/userMongoRepository";
 import { bcryptServise } from "../../domain/hashServise";
-import { nodemailerService } from "../../common/adapters/nodemailer-adapter";
 import { Result } from "../../comments/types/comment-types";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
 import { InputAuthType } from "../types/auth-types";
 import { jwtServise } from "../../domain/jwt-servise";
-import { registrationEmailTemplate } from "../../common/email-templates/registrationEmailTemplate";
-import { InferIdType, ObjectId } from "mongodb";
-import e, { Request, Response } from "express"
-import jwt from "jsonwebtoken";
-//import { jwtRepository } from "../../repositories/jwt-repositories";
-import { Console } from "console";
-import { ipControlRepository } from "../../security/repository/ipRepository";
-import { decode } from "punycode";
+import { ObjectId } from "mongodb";
+import { IpControlRepository } from "../../security/repository/ipRepository";
+import {injectable, inject} from 'inversify'
 
 
+@injectable()
+export class LoginServise {
+    constructor(@inject(IpControlRepository)protected ipControlRepository:IpControlRepository,
+                @inject(UserRepository)protected userRepository:UserRepository){
 
-
-export const loginServise = {
+    }
 
     async loginUser(input: InputAuthType, title: string, ip: string): Promise<Result<string | null>> {
         try {
-
             const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
 
             if (user === null) {
@@ -34,7 +28,6 @@ export const loginServise = {
                     extensions: [{ field: "code", message: 'Failed to send confirmation email pasword' }],
                     data: null
                 }
-
             }
             const checkPassword = await bcryptServise.checkPassword(input.password, user.passwordHash)
 
@@ -46,12 +39,10 @@ export const loginServise = {
                 }
 
             }
-            console.log(user._id + 'rrrrrrrrrrr')
             const jwtPayload = {
                 id: user._id.toString(),
                 deviceId: randomUUID()
             }
-            console.log(jwtPayload.deviceId + "oooooooo")
             const token: string = await jwtServise.createToken(jwtPayload)
 
             const refreshToken: string = await jwtServise.createRefreshToken(jwtPayload)
@@ -68,7 +59,7 @@ export const loginServise = {
                 exp: decoded.exp,
             }
 
-            const makeSession = await ipControlRepository.saveIp(dataForSession)
+            const makeSession = await this.ipControlRepository.saveIp(dataForSession)
 
             return {
                 status: ResultStatus.Success,
@@ -82,7 +73,7 @@ export const loginServise = {
                 data: null
             }
         }
-    },
+    }
 
     async checkAccessToken(authHeader: string): Promise<Result<IdType | null>> {
         const [schema, token] = authHeader.split(" ");
@@ -121,7 +112,7 @@ export const loginServise = {
             errorMessage: "Wrong auth",
             data: null,
         };
-    },
+    }
 
     async checkAndUpdateRefToken(refToken: string): Promise<Result<string | null>> {
 
@@ -137,7 +128,7 @@ export const loginServise = {
         }
 
         //const safeToken = await jwtRepository.findRefreshToken(payload)
-        const session = await ipControlRepository.findSessionByIdAndDeviceId(payload)
+        const session = await this.ipControlRepository.findSessionByIdAndDeviceId(payload)
         console.log(session + 'pokemon')
         if (session === null) {
             return {
@@ -179,7 +170,7 @@ export const loginServise = {
             deviceId: jwtPayload.deviceId,
             iat: decoded.iat
         }
-        const update = await ipControlRepository.refreshSession(updateData)
+        const update = await this.ipControlRepository.refreshSession(updateData)
         if (update === null) {
             return {
                 status: ResultStatus.Unauthorized,
@@ -193,5 +184,5 @@ export const loginServise = {
             data: { token, refreshToken }
         }
 
-    },
+    }
 }

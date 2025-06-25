@@ -1,5 +1,4 @@
 import { Router } from "express";
-//import { authControllers } from "../auth/controllers/autControllers";
 import { loginController } from "../auth/controllers/authLoginController";
 import { authMeController } from "../auth/controllers/authMeController";
 import { registrationConfirmationController } from "../auth/controllers/registrationConfirmationController";
