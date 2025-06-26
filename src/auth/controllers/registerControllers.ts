@@ -4,7 +4,7 @@ import { ResultStatus } from "../../input-uotput-types/resultCode"
 import { injectable, inject} from 'inversify'
 
 @injectable()
-class RegisterControllers {
+export class RegisterControllers {
     constructor(@inject(AuthServise)protected authServise:AuthServise){
 
     }

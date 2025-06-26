@@ -10,7 +10,7 @@ import { IpControlRepository } from "../../security/repository/ipRepository"
 import { SecurityService } from "../../security/servise/security-servise"
 
 @injectable()
-class LoginController {
+export class LoginControllers {
     constructor(@inject(LoginServise)protected loginServise:LoginServise,
                 @inject(UserServise)protected userServise:UserServise,
                 @inject(IpControlRepository)protected ipControlRepository:IpControlRepository,
@@ -162,7 +162,7 @@ class LoginController {
     async newPasswordController (req:Request,res:Response) {
 
     }
-    async passwordRecoveryControllers (req:Request,res:Response){
+    async passwordRecoveryController (req:Request,res:Response){
 
     }
 }

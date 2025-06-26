@@ -15,6 +15,10 @@ import { BlogControllers } from "./blog/controllers/blogControllers";
 import { IpControlRepository } from "./security/repository/ipRepository";
 import { SecurityService } from "./security/servise/security-servise";
 import { SecurityControllers } from "./security/controllers/securityControllers";
+import { AuthServise } from "./auth/servise/authRegister-servise";
+import { LoginServise } from "./auth/servise/authLogin-servise";
+import { RegisterControllers } from "./auth/controllers/registerControllers";
+import { LoginControllers } from "./auth/controllers/loginControllers";
 
 /*const userRepository = new UserRepository()
 const userServise = new UserServise(userRepository)
@@ -41,3 +45,8 @@ container.bind(BlogControllers).to(BlogControllers)
 container.bind(IpControlRepository).to(IpControlRepository)
 container.bind(SecurityService).to(SecurityService)
 container.bind(SecurityControllers).to(SecurityControllers)
+
+container.bind(AuthServise).to(AuthServise)
+container.bind(LoginServise).to(LoginServise)
+container.bind(RegisterControllers).to(RegisterControllers)
+container.bind(LoginControllers).to(LoginControllers)

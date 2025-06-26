@@ -1,27 +1,23 @@
 import { Router } from "express";
-import { loginController } from "../auth/controllers/authLoginController";
-import { authMeController } from "../auth/controllers/authMeController";
-import { registrationConfirmationController } from "../auth/controllers/registrationConfirmationController";
-import { registrationController } from "../auth/controllers/registrationController";
-import { registrationEmailResendingController } from "../auth/controllers/registrationEmailResending";
 import { authJWTMiddleware } from "../auth/middlewares/authJWTMiddleware";
 import { userValidationMiddlevare } from '../users/middlewars/usersMiddleware'
 import { inputCheckErrorsMiddleware } from '../middlewares/inputValidationResultMiddlewares'
-import { logoutController } from "../auth/controllers/logoutController";
-import { refreshTokenController } from "../auth/controllers/refreshTokenController";
 import { checkRateLimit } from "../middlewares/checkRateLimit";
-import { newPasswordController } from "../auth/controllers/newPassswordController";
-import { passwordRecoveryController } from "../auth/controllers/passwordRecoveryController";
+import { container } from "../composition-root";
+import { LoginControllers } from "../auth/controllers/loginControllers";
+import { RegisterControllers } from "../auth/controllers/registerControllers";
 
+const loginControllers = container.get(LoginControllers)
+const registrControllers = container.get(RegisterControllers)
 export const authRouter = Router()
 
-authRouter.post('/login', checkRateLimit , loginController)
-authRouter.get('/me',  authJWTMiddleware, authMeController)
-authRouter.post('/registration-confirmation',checkRateLimit, registrationConfirmationController )
-authRouter.post('/registration',...userValidationMiddlevare,checkRateLimit, inputCheckErrorsMiddleware, registrationController)
-authRouter.post('/registration-email-resending',checkRateLimit, registrationEmailResendingController)
-authRouter.post('/refresh-token',  refreshTokenController)
-authRouter.post('/logout',  logoutController)
-authRouter.post('/pasword-recovery', passwordRecoveryController )
-authRouter.post('/new-password', newPasswordController )
+authRouter.post('/login', checkRateLimit , loginControllers.loginController.bind(loginControllers))
+authRouter.get('/me',  authJWTMiddleware, loginControllers.authMeController.bind(loginControllers))
+authRouter.post('/registration-confirmation',checkRateLimit, registrControllers.registrationConfirmationController.bind(registrControllers) )
+authRouter.post('/registration',...userValidationMiddlevare,checkRateLimit, inputCheckErrorsMiddleware, registrControllers.registrationController.bind(registrControllers))
+authRouter.post('/registration-email-resending',checkRateLimit, registrControllers.registrationEmailResendingController.bind(registrControllers))
+authRouter.post('/refresh-token',  loginControllers.refreshTokenController.bind(loginControllers))
+authRouter.post('/logout',  loginControllers.logoutController.bind(loginControllers))
+authRouter.post('/pasword-recovery', loginControllers.passwordRecoveryController.bind(loginControllers) )
+authRouter.post('/new-password', loginControllers.newPasswordController.bind(loginControllers) )
  
