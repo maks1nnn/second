@@ -9,6 +9,8 @@ import { jwtServise } from "../../domain/jwt-servise";
 import { ObjectId } from "mongodb";
 import { IpControlRepository } from "../../security/repository/ipRepository";
 import {injectable, inject} from 'inversify'
+import { nodemailerService } from "../../common/adapters/nodemailer-adapter";
+import { passwordRecoveryEmailTemplate } from "../../common/email-templates/passwordRecoveryCodeEmail";
 
 
 @injectable()
@@ -183,6 +185,30 @@ export class LoginServise {
             status: ResultStatus.Success,
             data: { token, refreshToken }
         }
+
+    } 
+    async passwordRecovery (email:string){
+        const isUser = await this.userRepository.findByEmail(email)
+        if(isUser){
+            const emailSent = await nodemailerService.sendEmail(
+                isUser.email,
+                isUser.emailConfirmation.confirmationCode,
+                passwordRecoveryEmailTemplate
+            )
+            if (!emailSent) {
+                return {
+                    status: ResultStatus.BadRequest,
+                    data: null,
+                    extensions: [{ field: "email", message: 'Failed to send confirmation email' }],
+                };
+            }
+            return {status:ResultStatus.Success,
+                    data:null}                    
+        }else{return {status:ResultStatus.Unauthorized,
+                    errorMesssge:"email not found",
+                    data:null}}
+    }
+    async newPassword(){
 
     }
 }

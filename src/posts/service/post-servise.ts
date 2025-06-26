@@ -1,5 +1,5 @@
 import { PostRepository } from '../repository/postMongo-repositories'
-import { blogRepository } from '../../blog/repository/blogMongo-repositories'
+import { BlogRepository } from '../../blog/repository/blogMongo-repositories'
 import { InputPostInBlogType, InputPostType, OutputPostDBType } from '../types/post-types'
 import { PostDBType } from '../../db/post-db-type'
 import { ObjectId } from 'mongodb'
@@ -11,7 +11,8 @@ import { injectable, inject } from 'inversify'
 @injectable()
 export class PostServise   {
 
-    constructor(@inject(PostRepository)protected postRepository:PostRepository){
+    constructor(@inject(PostRepository)protected postRepository:PostRepository,
+                @inject(BlogRepository)protected blogRepository:BlogRepository){
 
     }
     
@@ -19,7 +20,7 @@ export class PostServise   {
     async createPosts(body: InputPostType) {
         // Check if the associated blog exists
 
-        const blog = await blogRepository.findForOutput(new ObjectId(body.blogId));
+        const blog = await this.blogRepository.findForOutput(new ObjectId(body.blogId));
         if (!blog) {
             // If the blog doesn't exist, return an error or throw an exception
             throw new Error("Associated blog not found");
@@ -39,7 +40,7 @@ export class PostServise   {
     }
 
     async createPostInBlog(body:InputPostInBlogType, blogId:string) {
-        const blog = await blogRepository.findForOutput(new ObjectId(blogId));
+        const blog = await this.blogRepository.findForOutput(new ObjectId(blogId));
         if (!blog) {
             // If the blog doesn't exist, return an error or throw an exception
            return null

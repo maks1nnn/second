@@ -3,7 +3,6 @@ import {   UserRepository } from "../repository/userMongoRepository"
 import { bcryptServise } from "../../domain/hashServise";
 import { randomUUID } from "crypto";
 import { add } from "date-fns";
-import { loginController } from "../../auth/controllers/authLoginController";
 import { UserDBType, UserOutputForMe } from "../../db/user-db-types";
 import { UserDbType } from "../types/user-types";
 import {injectable,inject} from 'inversify'

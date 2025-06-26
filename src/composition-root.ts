@@ -28,7 +28,7 @@ export const container = new Container();
 
 container.bind(UsersControllers).to(UsersControllers)
 container.bind(UserServise).to(UserServise)
-container.bind(UserRepository)
+container.bind(UserRepository).to(UserRepository)
 
 container.bind(PostRepository).to(PostRepository)
 container.bind(PostServise).to(PostServise)

@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from "express"
 import { ObjectId } from "mongodb"
 import { send } from "process"
 import { jwtServise } from "../../domain/jwt-servise"
-import { userServise } from "../../users/service/user-servise"
+import { UserRepository } from "../../users/repository/userMongoRepository"
+import { UserServise } from "../../users/service/user-servise"
 
-
+const userServise = new UserServise(new UserRepository())
 
 export const authJWTMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {

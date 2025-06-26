@@ -5,9 +5,7 @@ import { ObjectId } from 'mongodb'
 import {injectable} from 'inversify'
 
 @injectable()
-export class BlogRepository   {
-
-     
+export class BlogRepository   {     
 
     async createBlogs(inputData: InputBlogType) {
         
@@ -20,7 +18,6 @@ export class BlogRepository   {
             return false
         }
     }
-
     async findBlogs(id: ObjectId) {
         const blog = await  blogCollection.findOne({ _id: id })
         if (blog) {
