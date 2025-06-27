@@ -1,28 +1,28 @@
 import { randomUUID } from "crypto";
 import { IdType } from "../../users/types/user-types";
-import { UserRepository, userRepository } from "../../users/repository/userMongoRepository";
+import { UserRepository } from "../../users/repository/userMongoRepository";
 import { bcryptServise } from "../../domain/hashServise";
 import { Result } from "../../comments/types/comment-types";
 import { ResultStatus } from "../../input-uotput-types/resultCode";
-import { InputAuthType } from "../types/auth-types";
+import { InputAuthType, NewPasswordInputType } from "../types/auth-types";
 import { jwtServise } from "../../domain/jwt-servise";
 import { ObjectId } from "mongodb";
 import { IpControlRepository } from "../../security/repository/ipRepository";
-import {injectable, inject} from 'inversify'
+import { injectable, inject } from 'inversify'
 import { nodemailerService } from "../../common/adapters/nodemailer-adapter";
-import { passwordRecoveryEmailTemplate } from "../../common/email-templates/passwordRecoveryCodeEmail";
+import { newPasswordSuccess, passwordRecoveryEmailTemplate } from "../../common/email-templates/passwordRecoveryCodeEmail";
 
 
 @injectable()
 export class LoginServise {
-    constructor(@inject(IpControlRepository)protected ipControlRepository:IpControlRepository,
-                @inject(UserRepository)protected userRepository:UserRepository){
+    constructor(@inject(IpControlRepository) protected ipControlRepository: IpControlRepository,
+        @inject(UserRepository) protected userRepository: UserRepository) {
 
     }
 
     async loginUser(input: InputAuthType, title: string, ip: string): Promise<Result<string | null>> {
         try {
-            const user = await userRepository.findByEmailOrLogin(input.loginOrEmail)
+            const user = await this.userRepository.findByEmailOrLogin(input.loginOrEmail)
 
             if (user === null) {
                 return {
@@ -93,7 +93,7 @@ export class LoginServise {
         if (payload) {
             const userId = payload;
 
-            const user = await userRepository.findUser(new ObjectId(userId));
+            const user = await this.userRepository.findUser(new ObjectId(userId));
 
             if (!user) {
                 return {
@@ -149,7 +149,7 @@ export class LoginServise {
         }
 
 
-        const user = await userRepository.findUser(new ObjectId(payload.id));
+        const user = await this.userRepository.findUser(new ObjectId(payload.id));
 
         if (user === null) {
             return {
@@ -186,10 +186,10 @@ export class LoginServise {
             data: { token, refreshToken }
         }
 
-    } 
-    async passwordRecovery (email:string){
+    }
+    async passwordRecovery(email: string) {
         const isUser = await this.userRepository.findByEmail(email)
-        if(isUser){
+        if (isUser) {
             const emailSent = await nodemailerService.sendEmail(
                 isUser.email,
                 isUser.emailConfirmation.confirmationCode,
@@ -202,13 +202,53 @@ export class LoginServise {
                     extensions: [{ field: "email", message: 'Failed to send confirmation email' }],
                 };
             }
-            return {status:ResultStatus.Success,
-                    data:null}                    
-        }else{return {status:ResultStatus.Unauthorized,
-                    errorMesssge:"email not found",
-                    data:null}}
+            return {
+                status: ResultStatus.Success,
+                data: null
+            }
+        } else {
+            return {
+                status: ResultStatus.Unauthorized,
+                errorMesssge: "email not found",
+                data: null
+            }
+        }
     }
-    async newPassword(){
+    async newPassword(input: NewPasswordInputType) {
+        const checkConfirmCode = await this.userRepository.findUserByConfirmationCode(input.recoveryCode)
+        if (!checkConfirmCode) {
+            return {
+                status: ResultStatus.Unauthorized,
+                errorMessage: "confirmationCode not found",
+                data: null
+            }
+        }
+        const newPasswordHash = await bcryptServise.generateHash(input.newPassword)
+        const updatePass = await this.userRepository.updatePassword(input.newPassword, input.recoveryCode)
+        if (!updatePass) {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null,
+                extensions: [{ field: "pass", message: 'Failed to send confirmation pass' }],
+            };
+        } else {
+            const emailSent = await nodemailerService.sendEmail(
+                checkConfirmCode.email,
+                input.newPassword,
+                newPasswordSuccess
+            )
+            if (!emailSent) {
+                return {
+                    status: ResultStatus.BadRequest,
+                    data: null,
+                    extensions: [{ field: "email", message: 'Failed to send confirmation email' }],
+                };
 
+            }
+            return {
+                status: ResultStatus.Success,
+                data: null
+            }
+        }
     }
 }

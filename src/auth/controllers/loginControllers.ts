@@ -172,10 +172,23 @@ export class LoginControllers {
             return res.status(400).json({ error: 'Invalid operation' });
         } catch (err) {
             console.log(err)
-            return res.status(500).send("new password failed")
+            return res.status(500).send("email failed")
         }
     }
     async newPasswordController(req: Request, res: Response) {
+        try{
+            const result = await this.loginServise.newPassword(req.body)
+            if (result.status === ResultStatus.Unauthorized) {
+                return res.status(204).send('confirmCode invalid')
+            }
+            if (result.status === ResultStatus.Success) {
+                return res.status(204).send()
+            }
+            return res.status(400).json({ error: 'Invalid operation' });
 
+        }catch(err){
+            console.log(err)
+            return res.status(500).send('new password failed')
+        }
     }
 }

@@ -18,3 +18,8 @@ export type InputRegistrationType = {
     
 }
 
+export type NewPasswordInputType = {
+    newPassword: string,
+    recoveryCode: string
+}
+
