@@ -89,7 +89,7 @@ export class UserRepository {
     async updatePassword(newPassword:string,code:string){
         const user = await userCollection.updateOne({ "emailConfirmation.confirmationCode": code },{
             $set: {
-                passwordHash: newPassword
+                "passwordHash": newPassword
             }
         })
         if(user){

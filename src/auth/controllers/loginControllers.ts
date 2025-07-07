@@ -167,7 +167,7 @@ export class LoginControllers {
                 return res.status(204).send('email not searching')
             }
             if (result.status === ResultStatus.Success) {
-                return res.status(204).send()
+                return res.status(204).send(result.data)
             }
             return res.status(400).json({ error: 'Invalid operation' });
         } catch (err) {
@@ -179,7 +179,7 @@ export class LoginControllers {
         try{
             const result = await this.loginServise.newPassword(req.body)
             if (result.status === ResultStatus.Unauthorized) {
-                return res.status(204).send('confirmCode invalid')
+                return res.status(400).send({errorsMessages: result.extensions})
             }
             if (result.status === ResultStatus.Success) {
                 return res.status(204).send()

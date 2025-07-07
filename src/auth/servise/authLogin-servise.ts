@@ -204,7 +204,7 @@ export class LoginServise {
             }
             return {
                 status: ResultStatus.Success,
-                data: null
+                data: isUser.emailConfirmation.confirmationCode
             }
         } else {
             return {
@@ -219,8 +219,8 @@ export class LoginServise {
         if (!checkConfirmCode) {
             return {
                 status: ResultStatus.Unauthorized,
-                errorMessage: "confirmationCode not found",
-                data: null
+                extensions: [{ field: "recoveryCode", message: 'Failed to send confirmation email' }], 
+                data: null,                
             }
         }
         const newPasswordHash = await bcryptServise.generateHash(input.newPassword)
