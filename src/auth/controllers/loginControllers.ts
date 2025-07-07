@@ -167,7 +167,7 @@ export class LoginControllers {
                 return res.status(204).send('email not searching')
             }
             if (result.status === ResultStatus.Success) {
-                return res.status(204).send(result.data)
+                return res.status(204).send()
             }
             return res.status(400).json({ error: 'Invalid operation' });
         } catch (err) {

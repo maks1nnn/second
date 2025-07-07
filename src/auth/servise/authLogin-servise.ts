@@ -12,9 +12,13 @@ import { injectable, inject } from 'inversify'
 import { nodemailerService } from "../../common/adapters/nodemailer-adapter";
 import { newPasswordSuccess, passwordRecoveryEmailTemplate } from "../../common/email-templates/passwordRecoveryCodeEmail";
 
+ 
 
 @injectable()
 export class LoginServise {
+
+    private recoveryCodes: Map<string, string> = new Map();
+
     constructor(@inject(IpControlRepository) protected ipControlRepository: IpControlRepository,
         @inject(UserRepository) protected userRepository: UserRepository) {
 
@@ -36,7 +40,7 @@ export class LoginServise {
             if (!checkPassword) {
                 return {
                     status: ResultStatus.BadRequest,
-                    extensions: [{ field: "code", message: 'Failed to send confirmation email pasword' }],
+                    extensions: [{ field: "code", message: 'Failed to send confirmation email pasword!' }],
                     data: null
                 }
 
@@ -188,41 +192,128 @@ export class LoginServise {
 
     }
     async passwordRecovery(email: string) {
-        const isUser = await this.userRepository.findByEmail(email)
-        if (isUser) {
-            const emailSent = await nodemailerService.sendEmail(
-                isUser.email,
-                isUser.emailConfirmation.confirmationCode,
-                passwordRecoveryEmailTemplate
-            )
-            if (!emailSent) {
-                return {
-                    status: ResultStatus.BadRequest,
-                    data: null,
-                    extensions: [{ field: "email", message: 'Failed to send confirmation email' }],
-                };
-            }
+        const isUser = await this.userRepository.findByEmail(email);
+        
+        if (!isUser) {
             return {
-                status: ResultStatus.Success,
-                data: isUser.emailConfirmation.confirmationCode
-            }
-        } else {
-            return {
-                status: ResultStatus.Unauthorized,
-                errorMesssge: "email not found",
+                status: ResultStatus.Success, // Возвращаем Success даже если пользователя нет (по требованиям безопасности)
                 data: null
-            }
+            };
         }
+
+        // Генерируем новый код восстановления
+        const recoveryCode = randomUUID();
+        
+        // Сохраняем код в памяти
+        this.recoveryCodes.set(email, recoveryCode);
+
+        const emailSent = await nodemailerService.sendCode(
+            email,
+            recoveryCode,
+            passwordRecoveryEmailTemplate
+        );
+            if (!emailSent) {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null,
+                extensions: [{ field: "email", message: 'Failed to send confirmation email' }],
+            };
+        }
+
+        return {
+            status: ResultStatus.Success,
+            data: recoveryCode // Возвращаем код для тестирования
+        };
     }
     async newPassword(input: NewPasswordInputType) {
-        const checkConfirmCode = await this.userRepository.findUserByConfirmationCode(input.recoveryCode)
-        if (!checkConfirmCode) {
-            return {
-                status: ResultStatus.Unauthorized,
-                extensions: [{ field: "recoveryCode", message: 'Failed to send confirmation email' }], 
-                data: null,                
+        // Ищем email по коду восстановления
+        let userEmail: string | null = null;
+        
+        for (const [email, code] of this.recoveryCodes.entries()) {
+            if (code === input.recoveryCode) {
+                userEmail = email;
+                break;
             }
         }
+
+        if (!userEmail) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{ field: "recoveryCode", message: 'Invalid recovery code' }],
+                data: null,                
+            };
+        }
+
+        const user = await this.userRepository.findByEmail(userEmail);
+        if (!user) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{ field: "recoveryCode", message: 'User not found' }],
+                data: null,                
+            };
+        }
+
+        const newPasswordHash = await bcryptServise.generateHash(input.newPassword);
+        const updatePass = await this.userRepository.updatePassword(newPasswordHash, userEmail)
+        
+        if (!updatePass) {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null,
+                extensions: [{ field: "pass", message: 'Failed to update password' }],
+            };
+        }
+
+        // Удаляем использованный код
+        this.recoveryCodes.delete(userEmail);
+
+        // Отправляем уведомление
+        const emailSent = await nodemailerService.sendCode(
+            userEmail,
+            input.newPassword,
+            newPasswordSuccess
+        );
+
+        if (!emailSent) {
+            return {
+                status: ResultStatus.BadRequest,
+                data: null,
+                extensions: [{ field: "email", message: 'Failed to send confirmation email' }],
+            };
+        }
+
+        return {
+            status: ResultStatus.Success,
+            data: null
+        };
+    }
+
+    // Метод для тестирования - проверка наличия кода восстановления
+    hasRecoveryCode(email: string, code: string): boolean {
+        return this.recoveryCodes.get(email) === code;
+    }
+}
+   /* async newPassword(input: NewPasswordInputType) {
+         const recoveryCodeData = this.recoveryCodes.find(
+            rc => rc.code === input.recoveryCode && rc.expirationTime > new Date()
+        );
+        
+        if (!recoveryCodeData) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{ field: "recoveryCode", message: 'Invalid or expired recovery code' }],
+                data: null,                
+            };
+        }
+          const user = await this.userRepository.findByEmail(recoveryCodeData.email);
+        if (!user) {
+            return {
+                status: ResultStatus.Unauthorized,
+                extensions: [{ field: "email", message: 'User not found' }],
+                data: null,
+            };
+        }
+
         const newPasswordHash = await bcryptServise.generateHash(input.newPassword)
         const updatePass = await this.userRepository.updatePassword(input.newPassword, input.recoveryCode)
         if (!updatePass) {
@@ -232,8 +323,8 @@ export class LoginServise {
                 extensions: [{ field: "pass", message: 'Failed to send confirmation pass' }],
             };
         } else {
-            const emailSent = await nodemailerService.sendEmail(
-                checkConfirmCode.email,
+            const emailSent = await nodemailerService.sendCode(
+                user.email,
                 input.newPassword,
                 newPasswordSuccess
             )
@@ -251,4 +342,4 @@ export class LoginServise {
             }
         }
     }
-}
+}*/
