@@ -18,6 +18,7 @@
     "jsonwebtoken": "^9.0.2",
     "mogodb": "^0.0.1-security",
     "mongodb-memory-server-core": "^9.4.1",
+    "mongoose": "^8.16.3",
     "nodemailer": "^6.9.14",
     "reflect-metadata": "^0.2.2",
     "uuidv4": "^6.2.13"
