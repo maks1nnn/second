@@ -1,14 +1,26 @@
 import { SETTINGS } from "../settings";
 import { Collection, Db, MongoClient, ObjectId, ServerApiVersion } from "mongodb"
 import mongoose from "mongoose";
- 
+
 
 console.log(SETTINGS.MONGO_URL)
 
 //const client: MongoClient = new MongoClient(SETTINGS.MONGO_URL)
 
 //export const db : Db = client.db(SETTINGS.DB_NAME);
+const userSchema = new mongoose.Schema({
+    id: ObjectId,
+    login: String,
+    email: String,
+    passwordHash: String,
+    createAt: String,
+    emailConfirmation: {
+        confirmationCode: String,
+        expirationDate: Date,
+        isConfirmed: Boolean
+    }})
 
+    export const UserModel = mongoose.model('users' , userSchema)
 
 //export const postCollection  = db.collection (SETTINGS.POST_COLLECTION_NAME)
 //export const blogCollection  = db.collection (SETTINGS.BLOG_COLLECTION_NAME)
@@ -23,8 +35,8 @@ export const connectionToDB = async () => {
         //await client.connect()
         await mongoose.connect(SETTINGS.MONGO_URL + "/" + SETTINGS.DB_NAME)
         return true
-    
-    }catch(e) {
+
+    } catch (e) {
         console.log(e)
         await mongoose.disconnect()
         return false
