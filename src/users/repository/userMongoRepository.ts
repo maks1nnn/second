@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb"
-import { userCollection } from "../../db/mongo-db"
+import { UserModel } from "../../db/mongo-db"
 import { UserDBType } from "../../db/user-db-types";
 import { UserValidationRules } from "../types/user-types";
 import { injectable } from 'inversify'
@@ -11,26 +11,26 @@ export class UserRepository {
 
     async createUser(inputData: any) {
 
-        const insertInfo = await userCollection.insertOne(inputData)
+        const insertInfo = await UserModel.insertMany(inputData)
         if (insertInfo) {
-            return insertInfo.insertedId; // Возвращаем ID созданного пользователя
+            return insertInfo.map(doc => doc._id)// Возвращаем ID созданного пользователя
         } else { return null }
     }
 
     async findUser(id: ObjectId) {
-        const user = await userCollection.findOne({ _id: id })
+        const user = await UserModel.findOne({ _id: id })
         if (user) {
             return user
         } else { return null }
     }
 
     async deleteUser(id: ObjectId) {
-        const result = await userCollection.deleteOne({ _id: id })
+        const result = await UserModel.deleteOne({ _id: id })
         return result.deletedCount === 1
     }
 
     async findByLogin(data: string) {
-        const checkUser = await userCollection.findOne({ login: data });
+        const checkUser = await UserModel.findOne({ login: data });
         if (checkUser) {
             return checkUser
         }
@@ -39,7 +39,7 @@ export class UserRepository {
 
 
     async findByEmail(data: string) {
-        const checkUser = await userCollection.findOne({ email: data })
+        const checkUser = await UserModel.findOne({ email: data })
         if (checkUser) {
             return checkUser
         } else { return false }
@@ -47,7 +47,7 @@ export class UserRepository {
 
     async findUserByConfirmationCode(code: string) {
 
-        const user = await userCollection.findOne({ "emailConfirmation.confirmationCode": code })
+        const user = await UserModel.findOne({ "emailConfirmation.confirmationCode": code })
 
         if (user) {
             return user
@@ -57,7 +57,7 @@ export class UserRepository {
     }
 
     async updateUserIsConfirmed(id: ObjectId, confirm: boolean) {
-        const result = await userCollection.updateOne({ _id: id }, {
+        const result = await UserModel.updateOne({ _id: id }, {
             $set: {
                 "emailConfirmation.isConfirmed": confirm,
             }
@@ -66,7 +66,7 @@ export class UserRepository {
     }
 
     async updateUserConfirmInfo(id: ObjectId, confirmCode: string, confirmDate: Date) {
-        const result = await userCollection.updateOne({ _id: id }, {
+        const result = await UserModel.updateOne({ _id: id }, {
             $set: {
                 "emailConfirmation.confirmationCode": confirmCode,
                 "emailConfirmation.expirationDate": confirmDate,
@@ -77,7 +77,7 @@ export class UserRepository {
 
     async findByEmailOrLogin(loginOrEmail: string) {
 
-        const user = await userCollection.findOne({
+        const user = await UserModel.findOne({
             $or: [{ login: loginOrEmail }, { email: loginOrEmail }]
         });
         if (user) {
@@ -87,7 +87,7 @@ export class UserRepository {
         }
     }
     async updatePassword(newPassword:string,email:string){
-        const user = await userCollection.updateOne({ email: email },{
+        const user = await UserModel.updateOne({ email: email },{
             $set: {
                 "passwordHash": newPassword
             }
